@@ -1,0 +1,12 @@
+{
+    "name": "phandinhphu/manager_library",
+    "autoload": {
+        "psr-4": {
+            "Phandinhphu\\ManagerLibrary\\": "src/"
+        }
+    },
+    "require": {
+        "phpmailer/phpmailer": "^6.9",
+        "phpoffice/phpspreadsheet": "^2.2"
+    }
+}
