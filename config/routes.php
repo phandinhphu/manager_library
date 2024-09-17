@@ -6,7 +6,9 @@ $routes['default_controller'] = 'home';
  * */
 
 // Client
+$routes['trang-chu'] = 'client/home/index';
 // ...
 
 // Admin
+$routes['admin/trang-chu'] = 'admin/home/index';
 // ...

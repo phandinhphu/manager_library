@@ -2,11 +2,17 @@
 
 class Home extends Controller
 {
-    public function index()
+    private array $data = [];
+
+    public function __construct()
     {
-        $data['title'] = 'Client Home';
-        $this->view('client/templates/header', $data);
-        $this->view('client/home/index', $data);
-        $this->view('client/templates/footer', $data);
+        // do something
+    }
+
+    public function index(): void
+    {
+        $this->data['title'] = 'Client Home';
+        $this->data['content'] = 'client/home';
+        $this->view('layouts/client_layout', $this->data);
     }
 }

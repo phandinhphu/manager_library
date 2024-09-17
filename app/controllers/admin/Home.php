@@ -9,7 +9,7 @@ class Home extends Controller
         // do something
     }
 
-    public function index()
+    public function index(): void
     {
         $this->data['title'] = 'Admin Home';
         $this->data['content'] = 'admin/home';
