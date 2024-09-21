@@ -11,6 +11,7 @@ class Home extends Controller
 
     public function index(): void
     {
+        $this->data['subcontent'] = [];
         $this->data['title'] = 'Admin Home';
         $this->data['content'] = 'admin/home';
         $this->view('layouts/admin_layout', $this->data);

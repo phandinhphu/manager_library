@@ -5,10 +5,14 @@ $routes['default_controller'] = 'home';
  *  Đường dẫn ảo => Đường dẫn thật
  * */
 
-// Client
-$routes['trang-chu'] = 'client/home/index';
+// Client vidu : http://localhost/manager_library/trang-chu
+$routes['dang-nhap'] = 'client/auth/login';
+$routes['dang-ky'] = 'client/auth/register';
+$routes['trang-chu'] = 'client/home';
+$routes['tra-cuu/trang-(/+d).html'] = 'client/tracuu/index/$1';
+$routes['tra-cuu'] = 'client/tracuu';
 // ...
 
 // Admin
-$routes['admin/trang-chu'] = 'admin/home/index';
+$routes['quan-tri/dashboard'] = 'admin/home';
 // ...
