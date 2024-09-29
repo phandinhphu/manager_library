@@ -6,23 +6,23 @@
         <div class="header__menu">
             <ul class="first__list">
                 <li class="first__items active">
-                    <a class="first__items-link" href="index.html">Trang chủ</a>
+                    <a class="first__items-link" href="<?= WEB_ROOT . '/trang-chu' ?>">Trang chủ</a>
                 </li>
                 <li class="first__items">
-                    <a class="first__items-link" href="tracuu.html">Tra cứu</a>
-                </li>
-                <li class="first__items">
-                    <a
-                        class="first__items-link"
-                        href="wishlist.html">Wish list</a>
+                    <a class="first__items-link" href="<?= WEB_ROOT . '/tra-cuu' ?>">Tra cứu</a>
                 </li>
                 <li class="first__items">
                     <a
                         class="first__items-link"
-                        href="borrowbooks.html">Sách mượn</a>
+                        href="<?= WEB_ROOT . '/wishlist' ?>>">Wish list</a>
                 </li>
                 <li class="first__items">
-                    <a class="first__items-link" href="history.html">Lịch sử</a>
+                    <a
+                        class="first__items-link"
+                        href="<?= WEB_ROOT . '/muon-sach' ?>">Sách mượn</a>
+                </li>
+                <li class="first__items">
+                    <a class="first__items-link" href="<?= WEB_ROOT . '/lich-su' ?>">Lịch sử</a>
                 </li>
                 <li class="line"></li>
             </ul>
@@ -32,19 +32,37 @@
     <div class="header__second">
         <div class="header__second-user">
             <div class="header__menu">
+                <?php
+                    if (!isset($_SESSION['user'])) :
+                ?>
                 <ul class="first__list">
                     <li class="first__items">
                         <a
                             class="first__items-link"
-                            href="login.html">Đăng nhập</a>
+                            href="<?= WEB_ROOT . '/dang-nhap' ?>">Đăng nhập</a>
                     </li>
                     <li class="first__items">
                         <a
                             class="first__items-link"
-                            href="register.html">Đăng ký</a>
+                            href="<?= WEB_ROOT . '/dang-ky' ?>">Đăng ký</a>
                     </li>
                 </ul>
+                <?php else : ?>
+                <ul class="first__list">
+                    <li class="first__items">
+                        <a
+                            class="first__items-link"
+                            href="<?= WEB_ROOT . '/profile' ?>">Xin chào, <?= $_SESSION['user']['name'] ?></a>
+                    </li>
+                    <li class="first__items">
+                        <a
+                            class="first__items-link"
+                            href="<?= WEB_ROOT . '/logout' ?>">Đăng xuất</a>
+                    </li>
+                </ul>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </header>
+<script src="<?= WEB_ROOT . '/public/assets/client/js/line.js' ?>"></script>

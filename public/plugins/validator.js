@@ -28,7 +28,7 @@ function Validator(formSelector) {
 
     if (formElement) {
         var inputs = formElement.querySelectorAll('[name][rules]');
-        
+
         for (var input of inputs) {
             var rules = input.getAttribute('rules').split('|');
 
@@ -60,8 +60,8 @@ function Validator(formSelector) {
                     case 'radio':
                     case 'checkbox':
                         errorMessage = rule(formElement.querySelector(`[name="${event.target.name}"]:checked`)
-                                        ? formElement.querySelector(`[name="${event.target.name}"]:checked`).value
-                                        : '');
+                            ? formElement.querySelector(`[name="${event.target.name}"]:checked`).value
+                            : '');
                         break;
                     default:
                         errorMessage = rule(event.target.value);
@@ -71,19 +71,19 @@ function Validator(formSelector) {
             }
 
             if (errorMessage) {
-                var formGroup = event.target.closest('.form__group');
+                var formGroup = event.target.closest('.form__auth-group');
                 if (formGroup) {
                     formGroup.classList.add('invalid');
-                    var errorElement = formGroup.querySelector('.form__message');
+                    var errorElement = formGroup.querySelector('.form__auth-message');
                     if (errorElement) {
                         errorElement.innerText = errorMessage;
                     }
                 }
             } else {
-                var formGroup = event.target.closest('.form__group');
+                var formGroup = event.target.closest('.form__auth-group');
                 if (formGroup) {
                     formGroup.classList.remove('invalid');
-                    var errorElement = formGroup.querySelector('.form__message');
+                    var errorElement = formGroup.querySelector('.form__auth-message');
                     if (errorElement) {
                         errorElement.innerText = '';
                     }
@@ -94,10 +94,10 @@ function Validator(formSelector) {
         }
 
         function handleClearError(event) {
-            var formGroup = event.target.closest('.form__group');
+            var formGroup = event.target.closest('.form__auth-group');
             if (formGroup.classList.contains('invalid')) {
                 formGroup.classList.remove('invalid');
-                var errorElement = formGroup.querySelector('.form__message');
+                var errorElement = formGroup.querySelector('.form__auth-message');
                 if (errorElement) {
                     errorElement.innerText = '';
                 }
@@ -114,7 +114,7 @@ function Validator(formSelector) {
         for (var input of inputs) {
             if (!handleValidate({ target: input })) {
                 isValid = false;
-            }    
+            }
         }
 
         if (isValid) {

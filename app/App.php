@@ -1,6 +1,6 @@
 <?php
 class App {
-    private $__namespace, $__controller, $__method, $__params, $__route;
+    private mixed $__namespace, $__controller, $__method, $__params, $__route;
 
     public function __construct() {
         global $routes;

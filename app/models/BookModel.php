@@ -1,5 +1,5 @@
 <?php
-class Books extends Model
+class BookModel extends Model
 {
     private string $table = 'books';
 

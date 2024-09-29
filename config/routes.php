@@ -8,6 +8,8 @@ $routes['default_controller'] = 'home';
 // Client vidu : http://localhost/manager_library/trang-chu
 $routes['dang-nhap'] = 'client/auth/login';
 $routes['dang-ky'] = 'client/auth/register';
+$routes['dang-xuat'] = 'client/auth/logout';
+$routes['kich-hoat-tai-khoan'] = 'client/auth/activeAccount';
 $routes['trang-chu'] = 'client/home';
 $routes['tra-cuu/trang-(/+d).html'] = 'client/tracuu/index/$1';
 $routes['tra-cuu'] = 'client/tracuu';
