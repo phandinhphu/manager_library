@@ -24,8 +24,48 @@
         rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous" />
+    <!-- Thêm Select2 CSS -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+        rel="stylesheet"
+    />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/admin/css/grid.css' ?>" />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/admin/css/style.css' ?>" />
+
+    <style>
+        .text-truncate {
+            max-width: 150px; /* Adjust the width as needed */
+        }
+
+        .tooltip-inner {
+            font-size: 1.6rem;  /* Tăng kích thước font chữ */
+            padding: 0.8rem;     /* Điều chỉnh khoảng cách */
+        }
+
+        @media (max-width: 63.9375em) {
+            .text-truncate {
+                max-width: 78px; /* Adjust the width as needed */
+            }
+        }
+    </style>
+
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    ></script>
+    <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -35,26 +75,18 @@
         ?>
         <div class="container">
             <?php
-            $this->view('blocks/admin/sidebar');
-            $this->view($content, $subcontent);
+            $this->view('blocks/admin/sidebar', $headercontent ?? []);
             ?>
+            <div class="content">
+                <?php
+                $this->view($content, $subcontent ?? []);
+                $this->view('blocks/admin/footer');
+                ?>
+            </div>
         </div>
     </div>
 
-    <script src="<?= WEB_ROOT . '/public/assets/admin/js/line.js' ?>"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-        crossorigin="anonymous"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-        crossorigin="anonymous"></script>
+    <script src="<?= WEB_ROOT . '/public/assets/admin/js/main.js' ?>"></script>
 </body>
 
 </html>

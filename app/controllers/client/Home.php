@@ -13,6 +13,7 @@ class Home extends Controller
 
     public function index(): void
     {
+        $this->data['headercontent']['tab'] = 'trang-chu';
         $this->data['subcontent'][''] = [];
 
 

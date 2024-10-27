@@ -174,7 +174,7 @@
 </div>
 
 
-<script src="<?= WEB_ROOT . '/public/plugins/validator.js' ?>"></script>
+<script src="<?= WEB_ROOT . '/public/assets/client/js/validator.js' ?>"></script>
 <script>
     let avatar = $(".avatar");
     let inputImg = $("#avatar");

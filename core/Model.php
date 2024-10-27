@@ -33,7 +33,7 @@ class Model {
         $sql = !empty($where) ?
             "SELECT $selected FROM $this->table WHERE $condition LIMIT $offset, $this->limit" :
             "SELECT $selected FROM $this->table LIMIT $offset, $this->limit";
-        return $this->db->getAll($sql);
+        return $this->db->getAll($sql, $where);
     }
 
     public function getDetail($id): false|array

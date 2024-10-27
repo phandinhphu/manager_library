@@ -5,15 +5,22 @@
         </div>
         <div class="header__menu">
             <ul class="menu__items">
-                <li class="menu__item">
-                    <img
-                        class="menu__item-avatar"
-                        src="./assets/imgs/no-image.png"
-                        alt="avatar" />
-                </li>
-                <li class="menu__item">
-                    <a class="menu__item-link" href="./index.html">Đăng nhập</a>
-                </li>
+                <?php if (isset($_SESSION['admin'])) : ?>
+                    <li class="menu__item">
+                        <img
+                            class="menu__item-avatar"
+                            src="<?= WEB_ROOT . '/' . $_SESSION['admin']['avatar'] ?>"
+                            alt="avatar" />
+                    </li>
+
+                    <li class="menu__item">
+                        <h5 class="menu__item-name"><?= $_SESSION['admin']['name'] ?></h5>
+                    </li>
+                <?php else : ?>
+                    <li class="menu__item">
+                        <a class="menu__item-link" href="./index.html">Đăng nhập</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

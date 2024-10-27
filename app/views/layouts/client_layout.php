@@ -26,8 +26,22 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous"
     />
+    <!-- Thêm Select2 CSS -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+            rel="stylesheet"
+    />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/client/css/grid.css' ?>" />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/client/css/style.css' ?>" />
+    <style>
+        .select2-container .select2-selection--single {
+            font-size: 1.6rem; /* Kích thước font của hộp lựa chọn */
+        }
+
+        .select2-dropdown .select2-results__option {
+            font-size: 1.6rem; /* Kích thước font của các mục trong dropdown */
+        }
+    </style>
 
     <script
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -49,7 +63,7 @@
 <body>
     <div class="app">
         <?php 
-            $this->view('blocks/client/header');
+            $this->view('blocks/client/header', $headercontent ?? []);
             $this->view($content, $subcontent ?? []);
             $this->view('blocks/client/footer');
         ?>

@@ -11,6 +11,11 @@ class Home extends Controller
 
     public function index(): void
     {
+        if (!isset($_SESSION['admin'])) {
+            header('Location: ' . WEB_ROOT . '/quan-tri/dang-nhap');
+            exit();
+        }
+
         $this->data['subcontent'] = [];
         $this->data['title'] = 'Admin Home';
         $this->data['content'] = 'admin/home';

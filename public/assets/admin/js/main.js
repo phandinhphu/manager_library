@@ -1,15 +1,15 @@
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
+const selector = document.querySelector.bind(document);
+const selectorAll = document.querySelectorAll.bind(document);
 
-$$(".sidebar__item").forEach((item) => {
+selectorAll(".sidebar__item").forEach((item) => {
     item.addEventListener("click", () => {
-        $(".sidebar__item.selected")?.classList.remove("selected");
+        selector(".sidebar__item.selected")?.classList.remove("selected");
 
         item.classList.add("selected");
     });
 });
 
-$$(".sidebar__item-link").forEach((item) => {
+selectorAll(".sidebar__item-link").forEach((item) => {
     item.addEventListener("click", () => {
         let arrow = item.querySelector(".icon");
         let subitems = item.nextElementSibling;

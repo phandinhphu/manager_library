@@ -11,18 +11,18 @@ class Auth extends Controller
 
     public function __construct()
     {
-        $this->authModel = $this->model('UserModel');
+        $this->authModel = $this->model('StaffModel');
     }
 
     /***
      * @author Phan Đình Phú
-     * @since 2024/10/14
+     * @since 2024/10/17
      * @return void
      */
     public function logout(): void
     {
-        unset($_SESSION['user']);
-        header('location: ' . WEB_ROOT . '/dang-nhap');
+        unset($_SESSION['admin']);
+        header('location: ' . WEB_ROOT . '/quan-tri/dashboard');
     }
 
     /***
@@ -32,8 +32,8 @@ class Auth extends Controller
      */
     public function login(): void
     {
-        if (isset($_SESSION['user_id'])) {
-            header('location: ' . WEB_ROOT . '/trang-chu');
+        if (isset($_SESSION['admin'])) {
+            header('location: ' . WEB_ROOT . '/quan-tri/dashboard');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -46,7 +46,7 @@ class Auth extends Controller
             $loggedInUser = $this->authModel->login($dataReq['email'], $dataReq['password']);
 
             if ($loggedInUser) {
-                $this->createUserSession($loggedInUser);
+                $this->createAdminSession($loggedInUser);
             } else {
                 if (!$this->authModel->getUser(['email' => $dataReq['email']])) {
                     $data['email_err'] = 'No user found. Check your email';
@@ -58,14 +58,14 @@ class Auth extends Controller
         }
 
         $this->data['title'] = 'Login';
-        $this->data['content'] = 'client/auth/login';
+        $this->data['content'] = 'admin/auth/login';
 
-        $this->view('layouts/client_layout', $this->data);
+        $this->view('layouts/admin_login_layout', $this->data);
     }
 
     /***
      * @author Phan Đình Phú
-     * @since 2024/10/14
+     * @since 2024/10/17
      * @return void
      */
     public function register(): void
@@ -73,11 +73,10 @@ class Auth extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dataReq = [
                 'email' => trim($_POST['email']),
-                'username' => trim($_POST['username']),
+                'staffname' => trim($_POST['staffname']),
                 'password' => trim($_POST['password']),
                 'phone' => trim($_POST['phone']),
                 'cccd' => trim($_POST['cccd']),
-                'address' => trim($_POST['address']),
             ];
 
             $checkAvatar = $this->processAvatar();
@@ -100,7 +99,7 @@ class Auth extends Controller
             }
 
             // Validate username
-            if ($this->authModel->getUser(['user_name' => $dataReq['username']])) {
+            if ($this->authModel->getUser(['staff_name' => $dataReq['staffname']])) {
                 echo json_encode([
                     'status' => 'error',
                     'message' => 'Tên người dùng đã tồn tại'
@@ -119,41 +118,25 @@ class Auth extends Controller
 
             $dataReq['avatar'] = $checkAvatar['path'];
             $dataReq['password'] = password_hash($dataReq['password'], PASSWORD_DEFAULT);
-            $activeToken = md5(uniqid(rand(), true));
-            
+
             $dataIns = [
-                'email' => $dataReq['email'],
-                'user_name' => $dataReq['username'],
+                'staff_name' => $dataReq['staffname'],
                 'pass_word' => $dataReq['password'],
                 'phone_number' => $dataReq['phone'],
-                'cccd' => $dataReq['cccd'],
-                'address' => $dataReq['address'],
                 'avatar' => $dataReq['avatar'],
+                'email' => $dataReq['email'],
+                'cccd' => $dataReq['cccd'],
                 'create_at' => date('Y-m-d H:i:s'),
                 'update_at' => date('Y-m-d H:i:s'),
-                'active_token' => $activeToken
             ];
             
             $rs = $this->authModel->Add($dataIns);
 
             if ($rs) {
-                $resSendEmail = $this->sendMail(
-                    $dataReq['email'],
-                    'Kích hoạt tài khoản',
-                    'Click vào link sau để kích hoạt tài khoản: ' . WEB_ROOT . '/kich-hoat-tai-khoan?token=' . $activeToken
-                );
-
-                if ($resSendEmail) {
-                    echo json_encode([
-                        'status' => 'success',
-                        'message' => 'Đăng ký thành công. Vui lòng kiểm tra email để kích hoạt tài khoản',
-                    ]);
-                } else {
-                    echo json_encode([
-                        'status' => 'error',
-                        'message' => 'Đăng ký không thành công. Vui lòng thử lại sau',
-                    ]);
-                }
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Đăng ký thành công. Vui lòng kiểm tra email để kích hoạt tài khoản',
+                ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
@@ -167,31 +150,6 @@ class Auth extends Controller
             $this->view('layouts/client_layout', $this->data);
         }
 
-    }
-
-    /***
-     * @author Phan Đình Phú
-     * @since 2024/10/14
-     * @return void
-     */
-    public function activeAccount(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $token = $_GET['token'];
-            $user = $this->authModel->getUser(['active_token' => $token]);
-
-            if ($user) {
-                $this->authModel->updateActive($user['id']);
-                echo '
-                    <h1>Kích hoạt tài khoản thành công</h1>
-                    <a href="' . WEB_ROOT . '/dang-nhap">Đăng nhập</a>
-                ';
-            } else {
-                echo '
-                    <h1>Token không hợp lệ</h1>
-                ';
-            }
-        }
     }
 
     public function forgotPassword(): void
@@ -210,13 +168,13 @@ class Auth extends Controller
      * @param $loggedInUser
      * @return void
      */
-    private function createUserSession($loggedInUser): void
+    private function createAdminSession($loggedInUser): void
     {
-        $_SESSION['user']['user_id'] = $loggedInUser['id'];
-        $_SESSION['user']['email'] = $loggedInUser['email'];
-        $_SESSION['user']['name'] = $loggedInUser['user_name'];
-        $_SESSION['user']['avatar'] = $loggedInUser['avatar'];
-        header('location: ' . WEB_ROOT . '/trang-chu');
+        $_SESSION['admin']['user_id'] = $loggedInUser['id'];
+        $_SESSION['admin']['email'] = $loggedInUser['email'];
+        $_SESSION['admin']['name'] = $loggedInUser['staff_name'];
+        $_SESSION['admin']['avatar'] = $loggedInUser['avatar'];
+        header('location: ' . WEB_ROOT . '/quan-tri/dashboard');
     }
 
     /***
@@ -291,46 +249,5 @@ class Auth extends Controller
             'status' => 'success',
             'path' => 'uploads/no-image.png'
         ];
-    }
-
-    /***
-     * @author Phan Đình Phú
-     * @since 2024/10/17
-     * @param $to
-     * @param $subject
-     * @param $message
-     * @return bool
-     */
-    private function sendMail($to, $subject, $message): bool
-    {
-        //Create an instance; passing `true` enables exceptions
-        $mail = new PHPMailer(true);
-
-        try {
-            //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'phuphandinh2004@gmail.com';                     //SMTP username
-            $mail->Password   = 'tebd hrzo dujx nvcr';                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-            //Recipients
-            $mail->setFrom('phuphandinh2004@gmail.com', 'Phan Dinh Phu');
-            $mail->addAddress($to);     //Add a recipient
-
-            //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->CharSet = 'UTF-8';
-            $mail->Subject = $subject;
-            $mail->Body    = $message;
-
-            $mail->send();
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
     }
 }

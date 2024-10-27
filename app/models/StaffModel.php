@@ -1,7 +1,7 @@
 <?php
-class AuthModel extends Model
+class StaffModel extends Model
 {
-    public string $table = 'users';
+    public string $table = 'staffs';
 
     public function __construct()
     {
@@ -20,25 +20,10 @@ class AuthModel extends Model
         $sql = "SELECT * FROM $this->table WHERE email = :email";
         $user = $this->db->getOne($sql, ['email' => $email]);
         if ($user) {
-            if (password_verify($password, $user['password'])) {
+            if (password_verify($password, $user['pass_word'])) {
                 return $user;
             }
         }
         return false;
-    }
-
-    public function updateActive($userId): false|PDOStatement
-    {
-        $dataUpdate = [
-            'status_account' => 1,
-            'active_token' => '',
-            'update_at' => date('Y-m-d H:i:s')
-        ];
-
-        $where = [
-            'id' => $userId,
-        ];
-
-        return $this->db->update($this->table, $dataUpdate, $where);
     }
 }
