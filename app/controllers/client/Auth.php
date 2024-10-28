@@ -194,14 +194,114 @@ class Auth extends Controller
         }
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/28
+     * @return void
+     */
     public function forgotPassword(): void
     {
-        $this->view('client/auth/forgot-password');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'];
+
+            $user = $this->authModel->getUser(['email' => $email]);
+
+            if ($user) {
+                $token = md5(uniqid(rand(), true));
+
+                $rs = $this->sendMail(
+                    $email,
+                    'Quên mật khẩu',
+                    'Click vào link sau để đặt lại mật khẩu: ' . WEB_ROOT . '/reset-password?token=' . $token
+                );
+
+                if ($rs) {
+                    $this->authModel->Update(['forgot_token' => $token], ['email' => $email]);
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'Vui lòng kiểm tra email để đặt lại mật khẩu'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Có lỗi xảy ra. Vui lòng thử lại sau'
+                    ]);
+                }
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Email không tồn tại'
+                ]);
+            }
+        } else {
+            $this->data['title'] = 'Forgot Password';
+            $this->data['content'] = 'client/auth/forgotpassword';
+
+            $this->view('layouts/client_layout', $this->data);
+        }
+
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/28
+     * @return void
+     */
     public function resetPassword(): void
     {
-        $this->view('client/auth/reset-password');
+        if (isset($_GET['token'])) {
+            $token = $_GET['token'];
+            $user = $this->authModel->getUser(['forgot_token' => $token]);
+
+            if ($user) {
+                $this->data['subcontent']['token'] = $token;
+                $this->data['title'] = 'Đặt lại mật khẩu';
+                $this->data['content'] = 'client/auth/resetpassword';
+
+                $this->view('layouts/client_layout', $this->data);
+            } else {
+                echo '
+                    <h1>Token không hợp lệ</h1>
+                ';
+            }
+        } else {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $token = $_POST['token'];
+                $password = $_POST['password'];
+
+                $user = $this->authModel->getUser(['forgot_token' => $token]);
+
+                if ($user) {
+                    $rs = $this->authModel->Update([
+                        'pass_word' => password_hash($password, PASSWORD_DEFAULT),
+                        'update_at' => date('Y-m-d H:i:s')
+                    ], ['forgot_token' => $token]);
+
+                    if ($rs) {
+                        $this->authModel->Update(['forgot_token' => null], ['email' => $user['email']]);
+
+                        echo json_encode([
+                            'status' => 'success',
+                            'message' => 'Đặt lại mật khẩu thành công'
+                        ]);
+                    } else {
+                        echo json_encode([
+                            'status' => 'error',
+                            'message' => 'Có lỗi xảy ra. Vui lòng thử lại sau'
+                        ]);
+                    }
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Token không hợp lệ'
+                    ]);
+                }
+            } else {
+                echo '
+                    <h1>Không tìm thấy token đặt lại mật khẩu</h1>
+                ';
+            }
+        }
     }
 
     /***

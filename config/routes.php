@@ -25,6 +25,7 @@ $routes['dang-nhap'] = 'client/auth/login';
 $routes['dang-ky'] = 'client/auth/register';
 $routes['dang-xuat'] = 'client/auth/logout';
 $routes['quen-mat-khau'] = 'client/auth/forgotPassword';
+$routes['reset-password'] = 'client/auth/resetPassword';
 $routes['kich-hoat-tai-khoan'] = 'client/auth/activeAccount';
 $routes['trang-chu'] = 'client/home';
 $routes['tra-cuu/trang-(\d+).html'] = 'client/tracuu/index/$1';

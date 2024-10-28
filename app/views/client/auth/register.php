@@ -208,8 +208,6 @@
 
         const { status, message } = await response.json();
 
-        console.log(status, message);
-
         if (status === 'error') {
             modalView.querySelector('.modal-title').innerText = 'Error';
             modalView.querySelector('.modal-body').innerHTML = `

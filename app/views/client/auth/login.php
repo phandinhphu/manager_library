@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<script src="<?= WEB_ROOT . '/public/plugins/validator.js' ?>"></script>
+<script src="<?= WEB_ROOT . '/public/assets/client/js/validator.js' ?>"></script>
 <script>
     new Validator('#form__auth');
 </script>
