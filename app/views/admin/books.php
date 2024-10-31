@@ -47,6 +47,7 @@
                                 id="author"
                                 class="form__filter-input"
                             >
+                                <option value="">Chọn tác giả</option>
                                 <?php foreach ($authors as $author) : ?>
                                     <option value="<?= $author['id'] ?>">
                                         <?= $author['author_name'] ?>
@@ -85,6 +86,7 @@
                                 id="publisher"
                                 class="form__filter-input"
                             >
+                                <option value="">Chọn nhà xuất bản</option>
                                 <?php foreach ($publishers as $publisher) : ?>
                                     <option value="<?= $publisher['id'] ?>">
                                         <?= $publisher['publisher_name'] ?>

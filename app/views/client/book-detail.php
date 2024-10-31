@@ -21,7 +21,7 @@
                                 <h3 class="component__content-info-title">Nhà xuất bản</h3>
                                 <p class="component__content-info-text"><?= $book['publisher_name'] ?></p>
                                 <h3 class="component__content-info-title">Thể loại</h3>
-                                <p class="component__content-info-text">Truyện</p>
+                                <p class="component__content-info-text"><?= $book['categories'] ?></p>
                                 <h3 class="component__content-info-title">Năm xuất bản</h3>
                                 <p class="component__content-info-text"><?= $book['year_published'] ?></p>
                                 <h3 class="component__content-info-title">Số lượng</h3>
@@ -44,7 +44,10 @@
                                         <span class="action__count dislikes"><?= $amount_dislikes ?></span>
                                     </div>
                                     <div class="action__item">
-                                        <button id="wishlist-btn" class="btn__action">Add wishlist</button>
+                                        <button
+                                            id="btn-add-wishlist"
+                                            class="btn__action"
+                                        >Add wishlist</button>
                                     </div>
                                 </div>
                             </div>
@@ -103,12 +106,12 @@
                 <div class="component__content">
                     <div class="list__items">
                         <div class="row">
-                            <?php foreach ($same_category_books as $book) : ?>
-                            <a href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>" class="grCol grL-2-4 grM-4 grC-6">
+                            <?php foreach ($same_category_books as $same_category_book) : ?>
+                            <a href="<?= WEB_ROOT . '/sach/chi-tiet/' . $same_category_book['id'] ?>" class="grCol grL-2-4 grM-4 grC-6">
                                 <div class="list__item">
-                                    <img class="book__img" src="<?= WEB_ROOT . '/' . $book['img'] ?>" alt="Ảnh sách" />
+                                    <img class="book__img" src="<?= WEB_ROOT . '/' . $same_category_book['img'] ?>" alt="Ảnh sách" />
                                     <div class="book__title">
-                                        <h3 class="book__title-text"><?= $book['book_name'] ?></h3>
+                                        <h3 class="book__title-text"><?= $same_category_book['book_name'] ?></h3>
                                     </div>
                                 </div>
                             </a>
@@ -125,12 +128,12 @@
                 <div class="component__content">
                     <div class="list__items">
                         <div class="row">
-                            <?php foreach ($same_author_books as $book) : ?>
-                                <a href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>" class="grCol grL-2-4 grM-4 grC-6">
+                            <?php foreach ($same_author_books as $same_author_book) : ?>
+                                <a href="<?= WEB_ROOT . '/sach/chi-tiet/' . $same_author_book['id'] ?>" class="grCol grL-2-4 grM-4 grC-6">
                                     <div class="list__item">
-                                        <img class="book__img" src="<?= WEB_ROOT . '/' . $book['img'] ?>" alt="Ảnh sách" />
+                                        <img class="book__img" src="<?= WEB_ROOT . '/' . $same_author_book['img'] ?>" alt="Ảnh sách" />
                                         <div class="book__title">
-                                            <h3 class="book__title-text"><?= $book['book_name'] ?></h3>
+                                            <h3 class="book__title-text"><?= $same_author_book['book_name'] ?></h3>
                                         </div>
                                     </div>
                                 </a>
@@ -252,6 +255,7 @@
 
         if (res.status === 'success') {
             document.querySelector('.likes').innerHTML = res.amount_likes;
+            document.querySelector('.dislikes').innerHTML = res.amount_dislikes;
         } else {
             customAlert(res.message);
         }
@@ -263,9 +267,29 @@
         const res = await req.json();
 
         if (res.status === 'success') {
+            document.querySelector('.likes').innerHTML = res.amount_likes;
             document.querySelector('.dislikes').innerHTML = res.amount_dislikes;
         } else {
             customAlert(res.message);
         }
     }
+
+    document.getElementById('btn-add-wishlist').onclick = async () => {
+        const req = await fetch('<?= WEB_ROOT . '/danh-sach-mong-muon?book_id=' . $book['id'] ?>');
+        const res = await req.json();
+
+        if (res.status === 'success') {
+            customAlert(res.message, 'success');
+        } else {
+            customAlert(res.message);
+        }
+    }
+
+
 </script>
+<?php
+echo $book['id'] . '<br/>';
+echo '<pre>';
+print_r($book);
+echo '</pre>';
+?>

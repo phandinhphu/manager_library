@@ -128,6 +128,7 @@
                                 id="author"
                                 class="form__input"
                             >
+                                <option value="">Chọn tác giả</option>
                                 <?php foreach ($author as $item) : ?>
                                     <option
                                         value="<?= $item['id'] ?>"
@@ -177,6 +178,7 @@
                                 id="publisher"
                                 class="form__input"
                             >
+                                <option value="">Chọn nhà xuất bản</option>
                                 <?php foreach ($publisher as $item) : ?>
                                     <option
                                         value="<?= $item['id'] ?>"

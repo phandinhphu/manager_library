@@ -17,6 +17,7 @@ class Home extends Controller
         }
 
         $this->data['subcontent'] = [];
+        $this->data['headercontent']['tab'] = 'dashboard';
         $this->data['title'] = 'Admin Home';
         $this->data['content'] = 'admin/home';
         $this->view('layouts/admin_layout', $this->data);

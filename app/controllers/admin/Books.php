@@ -95,8 +95,6 @@ class Books extends Controller
                 'quantity' => $dataReq['quantity'],
                 'price' => $dataReq['price'],
                 'img' => $dataReq['img'],
-                'likes' => 0,
-                'dislikes' => 0,
             ];
 
             $bookId = $this->bookModel->insertBook($dataInsertBook);
@@ -312,11 +310,11 @@ class Books extends Controller
                 'status' => 'success',
                 'message' => 'Xóa sách thành công'
             ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Xóa sách thất bại'
+            ]);
         }
-
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Xóa sách thất bại'
-        ]);
     }
 }

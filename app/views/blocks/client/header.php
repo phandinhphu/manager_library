@@ -14,7 +14,7 @@
                 <li class="first__items <?= isset($tab) && $tab == 'wishlist' ? 'active' : '' ?>">
                     <a
                         class="first__items-link"
-                        href="<?= WEB_ROOT . '/wishlist' ?>">Wish list</a>
+                        href="<?= WEB_ROOT . '/danh-sach-mong-muon' ?>">Wish list</a>
                 </li>
                 <li class="first__items <?= isset($tab) && $tab == 'book-borrow' ? 'active' : '' ?>">
                     <a

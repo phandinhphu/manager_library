@@ -49,10 +49,12 @@ class Books extends Controller
         } else {
             $this->bookModel->like($bookId);
             $amountLikes = $this->bookModel->getAmountLiked($bookId);
+            $amountDislikes = $this->bookModel->getAmountDisliked($bookId);
 
             echo json_encode([
                 'status' => 'success',
-                'amount_likes' => $amountLikes
+                'amount_likes' => $amountLikes,
+                'amount_dislikes' => $amountDislikes
             ]);
         }
     }
@@ -72,12 +74,52 @@ class Books extends Controller
             ]);
         } else {
             $this->bookModel->dislike($bookId);
+            $amountLikes = $this->bookModel->getAmountLiked($bookId);
             $amountDislikes = $this->bookModel->getAmountDisliked($bookId);
 
             echo json_encode([
                 'status' => 'success',
+                'amount_likes' => $amountLikes,
                 'amount_dislikes' => $amountDislikes
             ]);
+        }
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/31
+     * @param $bookId
+     * @return void
+     */
+    public function wishList(): void
+    {
+        if (isset($_GET['book_id'])) {
+            $bookId = $_GET['book_id'];
+            if (!isset($_SESSION['user']['user_id'])) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Bạn cần đăng nhập để thực hiện chức năng này'
+                ]);
+            } else {
+                $rs = $this->bookModel->addWishList($bookId);
+                if ($rs) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'Thêm sách vào danh sách mong muốn thành công'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Bạn đã thêm sách này vào danh sách mong muốn rồi'
+                    ]);
+                }
+            }
+        } else {
+            $this->data['headercontent']['tab'] = 'wishlist';
+            $this->data['title'] = 'Danh sách mong muốn';
+            $this->data['content'] = 'client/wishlist';
+
+            $this->view('layouts/client_layout', $this->data);
         }
     }
 }

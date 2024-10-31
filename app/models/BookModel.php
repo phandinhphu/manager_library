@@ -69,8 +69,11 @@ class BookModel extends Model
 
         $book = $this->db->getAll($sql, ['id' => $id])[0];
 
-        $book['categories'] = $this->db->getAll("SELECT category_id FROM book_categories
-                                                WHERE book_id = :book_id", ['book_id' => $id]);
+        $categories = $this->db->getAll("SELECT category_name FROM book_categories, category
+                                            WHERE book_categories.category_id = category.id 
+                                            and book_id = :book_id", ['book_id' => $book['id']]);
+
+        $book['categories'] = implode(', ', array_column($categories, 'category_name'));
 
         return $book;
     }
@@ -79,8 +82,6 @@ class BookModel extends Model
      * @author Phan Đình Phú
      * @param $where array
      * @param $page int
-     * @param $booksName string
-     * @param string $categories
      * @return array
      * @since 2024/10/15
      */
@@ -331,6 +332,12 @@ class BookModel extends Model
         return $newBooks;
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/27
+     * @param $bookId
+     * @return array
+     */
     public function getSameAuthorBooks($bookId): array
     {
         $authorId = $this->db->getOne("SELECT author_id FROM $this->table WHERE id = :book_id", ['book_id' => $bookId]);
@@ -353,5 +360,27 @@ class BookModel extends Model
         }, $books);
 
         return $newBooks;
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/31
+     * @param $bookId
+     * @return bool
+     */
+    public function addWishList($bookId): bool
+    {
+        if (!isset($_SESSION['books']['wishlist'])) {
+            $_SESSION['books']['wishlist'] = [];
+        }
+
+        $book = $this->getBookById($bookId);
+
+        if (!in_array($book, $_SESSION['books']['wishlist'])) {
+            $_SESSION['books']['wishlist'][] = $book;
+            return true;
+        }
+
+        return false;
     }
 }
