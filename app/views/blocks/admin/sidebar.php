@@ -89,7 +89,7 @@
             <li class="sidebar__item" <?= $tab === 'logout' ? 'selected' : '' ?>>
                 <a
                         class="sidebar__item-link"
-                        href="<?= WEB_ROOT . '/quan-tri/dang-xuat' ?>">Request</a>
+                        href="<?= WEB_ROOT . '/quan-tri/dang-xuat' ?>">Logout</a>
             </li>
         </ul>
     </div>
