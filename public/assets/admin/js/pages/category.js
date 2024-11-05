@@ -1,4 +1,10 @@
-const PATH = "http://localhost/manager_library/admin/category/";
+const getWebRoot = () => {
+    const pathname = window.location.pathname; // Lấy đường dẫn hiện tại của URL
+    const projectName = 'manager_library'; // Tên dự án của bạn
+    const projectIndex = pathname.indexOf(projectName) + projectName.length; // Tìm vị trí của tên dự án trong đường dẫn
+    const projectPath = pathname.substring(0, projectIndex); // Cắt chuỗi để lấy đường dẫn đến tên dự án
+    return `${window.location.origin}${projectPath}`; // Trả về đường dẫn gốc của dự án
+};
 
 $(document).ready(() => {
 
