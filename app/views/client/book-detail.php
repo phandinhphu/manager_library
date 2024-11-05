@@ -275,7 +275,7 @@
     }
 
     document.getElementById('btn-add-wishlist').onclick = async () => {
-        const req = await fetch('<?= WEB_ROOT . '/danh-sach-mong-muon?book_id=' . $book['id'] ?>');
+        const req = await fetch('<?= WEB_ROOT . '/danh-sach-mong-muon?book_id=' . $book['id'] . '&action="add"' ?>');
         const res = await req.json();
 
         if (res.status === 'success') {

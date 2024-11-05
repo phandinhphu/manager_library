@@ -2,12 +2,14 @@
 class Books extends Controller
 {
     private mixed $bookModel;
+    private mixed $authorModel;
     private mixed $commentModel;
     private array $data = [];
 
     public function __construct()
     {
         $this->bookModel = $this->model('BookModel');
+        $this->authorModel = $this->model('AuthorModel');
         $this->commentModel = $this->model('CommentModel');
     }
 
@@ -88,12 +90,12 @@ class Books extends Controller
     /***
      * @author Phan Đình Phú
      * @since 2024/10/31
-     * @param $bookId
+     * @param $page
      * @return void
      */
-    public function wishList(): void
+    public function wishList($page = 1): void
     {
-        if (isset($_GET['book_id'])) {
+        if (isset($_GET['book_id']) && isset($_GET['action'])) {
             $bookId = $_GET['book_id'];
             if (!isset($_SESSION['user']['user_id'])) {
                 echo json_encode([
@@ -101,21 +103,49 @@ class Books extends Controller
                     'message' => 'Bạn cần đăng nhập để thực hiện chức năng này'
                 ]);
             } else {
-                $rs = $this->bookModel->addWishList($bookId);
-                if ($rs) {
-                    echo json_encode([
-                        'status' => 'success',
-                        'message' => 'Thêm sách vào danh sách mong muốn thành công'
-                    ]);
+                if ($_GET['action'] == 'remove') {
+                    $rs = $this->bookModel->removeFromWishList($bookId);
+                    if ($rs) {
+                        echo json_encode([
+                            'status' => 'success',
+                            'message' => 'Xóa sách khỏi danh sách mong muốn thành công'
+                        ]);
+                    } else {
+                        echo json_encode([
+                            'status' => 'error',
+                            'message' => 'Xóa sách khỏi danh sách mong muốn thất bại'
+                        ]);
+                    }
                 } else {
-                    echo json_encode([
-                        'status' => 'error',
-                        'message' => 'Bạn đã thêm sách này vào danh sách mong muốn rồi'
-                    ]);
+                    $rs = $this->bookModel->addWishList($bookId);
+                    if ($rs) {
+                        echo json_encode([
+                            'status' => 'success',
+                            'message' => 'Thêm sách vào danh sách mong muốn thành công'
+                        ]);
+                    } else {
+                        echo json_encode([
+                            'status' => 'error',
+                            'message' => 'Bạn đã thêm sách này vào danh sách mong muốn rồi'
+                        ]);
+                    }
                 }
             }
         } else {
+            $conditions = $_GET;
+
+            array_shift($conditions);
+
+            $booksWishList = $this->bookModel->getBooksWishListByPage($page, $conditions);
+
             $this->data['headercontent']['tab'] = 'wishlist';
+            $this->data['subcontent']['books_wishlist'] = $booksWishList['data'];
+            $this->data['subcontent']['authors'] = $this->authorModel->getAllAuthors();
+            $this->data['subcontent']['total_pages'] = $this->bookModel->getTotalPage($booksWishList['total']);
+            $this->data['subcontent']['page'] = $page;
+            $this->data['subcontent']['param_string'] = $this->bookModel->createParamString($conditions);
+            $this->data['subcontent']['url_page'] = WEB_ROOT . '/danh-sach-mong-muon/trang-';
+
             $this->data['title'] = 'Danh sách mong muốn';
             $this->data['content'] = 'client/wishlist';
 

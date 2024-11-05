@@ -33,5 +33,7 @@ $routes['tra-cuu'] = 'client/tracuu';
 $routes['sach/yeu-thich/(\d+)'] = 'client/books/like/$1';
 $routes['sach/khong-thich/(\d+)'] = 'client/books/dislike/$1';
 $routes['sach/chi-tiet/(\d+)'] = 'client/books/detail/$1';
+$routes['danh-sach-mong-muon/trang-(\d+).html'] = 'client/books/wishlist/$1';
 $routes['danh-sach-mong-muon'] = 'client/books/wishlist';
+$routes['add-request'] = 'request/addRequest';
 // ...

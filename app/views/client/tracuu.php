@@ -7,7 +7,7 @@
                 </div>
                 <div class="component__content">
                     <div class="component">
-                        <form class="form__filter" action="">
+                        <form class="form__filter" action="<?= WEB_ROOT . '/tra-cuu' ?>">
                             <div class="form__group">
                                 <label for="book_name" class="form__filter-label">Tên sách</label>
                                 <input type="text" name="book_name" id="book_name" class="form__filter-input">
@@ -69,7 +69,7 @@
                                 <button type="submit" class="btn">Tra cứu</button>
                             </div>
                             <div class="form__group">
-                                <a href="#" class="btn">Hủy</a>
+                                <a href="<?= WEB_ROOT . '/tra-cuu' ?>" class="btn">Hủy</a>
                             </div>
                         </form>
                     </div>

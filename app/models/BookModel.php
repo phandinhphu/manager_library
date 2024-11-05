@@ -383,4 +383,94 @@ class BookModel extends Model
 
         return false;
     }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/31
+     * @param $bookId
+     * @return bool
+     */
+    public function removeFromWishList($bookId): bool
+    {
+        $book = $this->getBookById($bookId);
+
+        if (in_array($book, $_SESSION['books']['wishlist'])) {
+            $key = array_search($book, $_SESSION['books']['wishlist']);
+            unset($_SESSION['books']['wishlist'][$key]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/3
+     * @param $page
+     * @param array $condition
+     * @return array
+     */
+    public function getBooksWishListByPage($page, $condition = []): array
+    {
+        if (!isset($_SESSION['books']['wishlist'])) {
+            return [
+                'data' => [],
+                'total' => 0
+            ];
+        }
+
+        $offset = ($page - 1) * $this->limit;
+
+        $books = array_slice($this->searchBooksInWishList($condition), $offset, $this->limit);
+
+        return [
+            'data' => $books,
+            'total' => count(isset($condition) ? $this->searchBooksInWishList($condition) : $_SESSION['books']['wishlist'])
+        ];
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/3
+     * @param $condition
+     * @return array
+     */
+    public function searchBooksInWishList($condition): array
+    {
+        $books = array_filter($_SESSION['books']['wishlist'], function ($book) use ($condition) {
+            if (isset($condition['book_name']) && $condition['book_name'] != '') {
+                if (!str_contains($book['book_name'], $condition['book_name'])) {
+                    return false;
+                }
+            }
+
+            if (isset($condition['author_id']) && $condition['author_id'] != '') {
+                if ($book['author_id'] != $condition['author_id']) {
+                    return false;
+                }
+            }
+
+            if (isset($condition['publisher_id']) && $condition['publisher_id'] != '') {
+                if ($book['publisher_id'] != $condition['publisher_id']) {
+                    return false;
+                }
+            }
+
+            if (isset($condition['isbn_code']) && $condition['isbn_code'] != '') {
+                if ($book['isbn_code'] != $condition['isbn_code']) {
+                    return false;
+                }
+            }
+
+            if (isset($condition['year_published']) && $condition['year_published'] != '') {
+                if ($book['year_published'] != $condition['year_published']) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        return $books;
+    }
 }
