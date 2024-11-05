@@ -13,7 +13,7 @@ class Auth extends Controller
     {
         $this->authModel = $this->model('StaffModel');
     }
-
+    
     /***
      * @author Phan Đình Phú
      * @since 2024/10/17

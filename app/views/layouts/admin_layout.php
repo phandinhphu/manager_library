@@ -85,8 +85,14 @@
             </div>
         </div>
     </div>
-
     <script src="<?= WEB_ROOT . '/public/assets/admin/js/main.js' ?>"></script>
+    
+    <!-- Địa chỉ mã JavaScript của các trang -->
+    <?php 
+    if (file_exists(_DIR_ROOT . '/public/assets/admin/js/pages/' . $script . '.js')) {
+        echo '<script src="' . WEB_ROOT . '/public/assets/admin/js/pages/' . $script . '.js"></script>';
+    } 
+    ?>
 </body>
 
 </html>
