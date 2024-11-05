@@ -99,4 +99,18 @@ class Controller {
             'path' => 'uploads/no-image.png'
         ];
     }
+
+    /**
+     * Hàm dùng để phản hồi kết quả xử lý
+     * @param mixed $success
+     * @param mixed $message
+     * @return void
+     * @author Trần Duy Vương
+     * @since 2024-10-31
+     */
+    public function response($success, $message): void
+    {
+        header('Content-type: application/json');
+        echo json_encode(['success' => $success, 'message' => $message]);
+    }
 }
