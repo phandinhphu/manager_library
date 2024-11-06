@@ -192,3 +192,9 @@
         </div>
     </div>
 </div>
+
+<?php 
+    if (file_exists(_DIR_ROOT . '/public/assets/admin/js/pages/' . $script . '.js')) {
+        echo '<script src="' . WEB_ROOT . '/public/assets/admin/js/pages/' . $script . '.js"></script>';
+    } 
+?>

@@ -6,10 +6,10 @@
                     class="sidebar__item-link"
                     href="<?= WEB_ROOT . '/quan-tri/dashboard' ?>">Dashboard</a>
             </li>
-            <li class="sidebar__item" <?= $tab === 'request' ? 'selected' : '' ?>>
+            <li class="sidebar__item <?= $tab === 'request' ? 'selected' : '' ?>">
                 <a
                     class="sidebar__item-link"
-                    href="<?= WEB_ROOT . '/quan-tri/request' ?>">Request</a>
+                    href="<?= WEB_ROOT . '/quan-tri/yeu-cau-muon-sach' ?>">Request</a>
             </li>
             <li class="sidebar__item <?= $tab === 'books' ? 'selected' : '' ?>">
                 <div class="sidebar__item-link">
