@@ -5,6 +5,7 @@ const getWebRoot = () => {
     const projectPath = pathname.substring(0, projectIndex); // Cắt chuỗi để lấy đường dẫn đến tên dự án
     return `${window.location.origin}${projectPath}`; // Trả về đường dẫn gốc của dự án
 };
+const PATH = getWebRoot() + '/admin/category/'; // Đường dẫn API
 
 $(document).ready(() => {
 
