@@ -182,9 +182,11 @@
         delay: 3000
     });
 
-    document.querySelectorAll('.btn-accepted').forEach(function (btn) {
-        btn.addEventListener('click', async function () {
-            const id = btn.getAttribute('data-id');
+    document.querySelector('tbody').addEventListener('click', async function(e) {
+        if (event.target.classList.contains('btn-accepted')) {
+            // Lấy ID hoặc thông tin cần thiết từ nút xóa
+            const id = event.target.dataset.id;
+            // Thực hiện thao tác xóa với fetch
             const page = <?= $page ?>;
             
             const req = await fetch(`<?= WEB_ROOT . '/request/accepted/' ?>${id}/${page}`);
@@ -205,9 +207,9 @@
                     `;
                     tbody.appendChild(tr);
                 } else {
+                    let html = '';
                     res.data.forEach(function (item, index) {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
+                        html += `
                             <td>${index + 1}</td>
                             <td>
                                 <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name user">
@@ -245,37 +247,39 @@
                                 </button>
                             </td>
                         `;
-                        tbody.appendChild(tr);
                     });
+                    tbody.innerHTML = html;
                 }
             } else {
                 toastElement.querySelector('.toast-body').textContent = res.message;
                 toastElement.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
                 toast.show();
             }
-        });
+        }
     });
 
-    document.querySelectorAll('.btn-denied').forEach(function (btn) {
-        btn.addEventListener('click', async function () {
+    document.querySelector('tbody').addEventListener('click', async function(e) {
+        if (event.target.classList.contains('btn-denied')) {
             if (!confirm('Bạn có chắc chắn muốn từ chối yêu cầu này?')) {
                 return;
             }
 
-            const id = btn.getAttribute('data-id');
+            // Lấy ID hoặc thông tin cần thiết từ nút xóa
+            const id = event.target.dataset.id;
             const page = <?= $page ?>;
 
+            // Thực hiện thao tác xóa với fetch
             const req = await fetch(`<?= WEB_ROOT . '/request/denied/' ?>${id}/${page}`);
             const res = await req.json();
-
+    
             if (res.status === "success") {
                 toastElement.querySelector('.toast-body').textContent = res.message;
                 toastElement.querySelector('.toast-header').classList.add('bg-success', 'text-white');
                 toast.show();
-
+    
                 const tbody = document.querySelector('table tbody');
                 tbody.innerHTML = '';
-
+    
                 if (res.data.length === 0) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -331,6 +335,6 @@
                 toastElement.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
                 toast.show();
             }
-        });
+        }
     });
 </script>

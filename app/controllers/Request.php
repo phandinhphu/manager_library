@@ -113,7 +113,7 @@ class Request extends Controller
 
         if ($rs) {
             $this->requestModel->Delete(['id' => $id]);
-            $requests = $this->requestModel->getAll('*', $page);
+            $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name', $page);
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Duyệt yêu cầu thành công',
@@ -139,7 +139,7 @@ class Request extends Controller
         $rs = $this->requestModel->Delete(['id' => $id]);
 
         if ($rs) {
-            $requests = $this->requestModel->getAll('*', $page);
+            $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name', $page);
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Từ chối yêu cầu thành công',
