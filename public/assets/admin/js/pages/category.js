@@ -26,7 +26,7 @@ $(document).ready(() => {
         if (!validateData(data)) return;
         
         $.ajax({
-            url: PATH + "insert",
+            url: getWebRoot() + "/quan-tri/quan-ly-the-loai/" + "insert",
             type: "POST",
             data: data,
             success: (response) => {
@@ -50,7 +50,7 @@ $(document).ready(() => {
         console.log(categoryId);
 
         $.ajax({
-            url: PATH + "get",
+            url: getWebRoot() + "/quan-tri/quan-ly-the-loai/" + "get",
             type: "POST",
             data: { id: categoryId },
             success: (response) => {
@@ -73,7 +73,7 @@ $(document).ready(() => {
         if (!validateData(data)) return;
 
         $.ajax({
-            url: PATH + "update",
+            url: getWebRoot() + "/quan-tri/quan-ly-the-loai/" + "update",
             type: "POST",
             data: data,
             success: (response) => {
@@ -97,7 +97,7 @@ $(document).ready(() => {
         
         if(confirm("Bạn có chắc chắn muốn xóa thể loại này không?")) {
             $.ajax({
-                url: PATH + "delete",
+                url: getWebRoot() + "/quan-tri/quan-ly-the-loai/" + "delete",
                 type: "POST",
                 data: { id: categoryId },
                 success: (response) => {

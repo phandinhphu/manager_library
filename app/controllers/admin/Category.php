@@ -26,15 +26,15 @@ class Category extends Controller
 
         $categories = $this->categoryModel->getByPage($page);
 
-        $this->data['headercontent']['tab'] = 'category';
+        $this->data['headercontent']['tab'] = 'books';
         $this->data['subcontent']['categories'] = $categories['data'];
         $this->data['subcontent']['total_pages'] = $this->categoryModel->getTotalPage($categories['total']);
         $this->data['subcontent']['page'] = $page;
         $this->data['subcontent']['url_page'] = WEB_ROOT . '/quan-tri/quan-ly-the-loai/trang-';
+        $this->data['subcontent']['script'] = 'category';
 
         $this->data['title'] = 'Quản lý thể loại';
         $this->data['content'] = 'admin/category';
-        $this->data['script'] = 'category';
 
         $this->view('layouts/admin_layout', $this->data);
     }
@@ -166,15 +166,15 @@ class Category extends Controller
             
             $categories = $this->categoryModel->search($keyword);
 
-            $this->data['headercontent']['tab'] = 'category';
+            $this->data['headercontent']['tab'] = 'books';
             $this->data['subcontent']['categories'] = $categories['data'];
             $this->data['subcontent']['total_pages'] = $this->categoryModel->getTotalPage($categories['total'] ?? 0);
             $this->data['subcontent']['page'] = $page;
             $this->data['subcontent']['url_page'] = WEB_ROOT . '/quan-tri/quan-ly-the-loai/trang-';
+            $this->data['subcontent']['script'] = 'category';
 
             $this->data['title'] = 'Quản lý thể loại';
             $this->data['content'] = 'admin/category';
-            $this->data['script'] = 'category';
 
             $this->view('layouts/admin_layout', $this->data);
         } else {

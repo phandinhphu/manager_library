@@ -12,7 +12,19 @@ class Request extends Controller
 
     public function index($page = 1): void
     {
-        $this->data['subcontent'] = [];
+        if (isset($_GET['user_name'])) {
+            $requests = $this->requestModel->getByCondition(['user_name' => $_GET['user_name']], '*', $page);
+        } else {
+            $requests = $this->requestModel->getAll('*', $page);
+        }
+
+        $this->data['headercontent']['tab'] = 'request';
+        $this->data['subcontent']['requests'] = $requests['data'];
+        $this->data['subcontent']['total_pages'] = $this->requestModel->getTotalPage($requests['total']);
+        $this->data['subcontent']['page'] = $page;
+        $this->data['subcontent']['url_page'] = WEB_ROOT . '/quan-tri/yeu-cau-muon-sach/trang-';
+        $this->data['subcontent']['title'] = 'Danh sách yêu cầu';
+
         $this->data['content'] = 'admin/request';
         $this->data['title'] = 'Danh sách yêu cầu';
 

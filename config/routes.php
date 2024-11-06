@@ -16,6 +16,8 @@ $routes['quan-tri/books/search'] = 'admin/books/search';
 $routes['quan-tri/books/sua-sach/(\d+)'] = 'admin/books/editBook/$1';
 $routes['quan-tri/books/trang-(\d+).html'] = 'admin/books/index/$1';
 $routes['quan-tri/books'] = 'admin/books';
+$routes['quan-tri/yeu-cau-muon-sach/trang-(\d+).html'] = 'request/$1';
+$routes['quan-tri/yeu-cau-muon-sach'] = 'request';
 
 // Category
 $routes['quan-tri/quan-ly-the-loai/trang-(\d+).html'] = 'admin/category/index/$1';
