@@ -72,38 +72,44 @@
                         </thead>
                         <tbody>
                             <?php if ($requests && count($requests) > 0) : 
-                                foreach ($requests as $request) : 
+                                foreach ($requests as $key => $request) : 
                             ?>
                             <tr>
-                                <td>1</td>
+                                <td><?= $key + 1 ?></td>
                                 <td>
-                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name user">
+                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $request['user_name'] ?>">
                                         <?= $request['user_name'] ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $request['book_name'] ?>">
                                         <?= $request['book_name'] ?>
                                     </span>
                                 </td>
                                 <td><?= $request['quantity'] ?></td>
                                 <td>
-                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $request['create_date'] ?>">
                                         <?= $request['create_date'] ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $request['expire_date'] ?>">
                                         <?= $request['expire_date'] ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="#" class="btn">
+                                    <button
+                                        class="btn btn-accepted"
+                                        data-id="<?= $request['id'] ?>"
+                                    >
                                         <i class="fa-regular fa-circle-check"></i>
-                                    </a>
-                                    <a href="#" class="btn btn__action--delete">
+                                    </button>
+                                    <button
+                                        class="btn btn__action--delete btn-denied"
+                                        data-id="<?= $request['id'] ?>"
+                                    >
                                         <i class="fa-solid fa-ban"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                             <?php endforeach; 
@@ -149,10 +155,182 @@
     </div>
 </div>
 
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="myToast" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto" style="font-size: 1.6rem">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="font-size: 1.5rem">
+            Đây là nội dung thông báo.
+        </div>
+    </div>
+</div>
+
 <script>
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
+</script>
+
+<script>
+    const toastElement = document.getElementById('myToast');
+    const toast = new bootstrap.Toast(toastElement, {
+        autohide: true,
+        delay: 3000
+    });
+
+    document.querySelectorAll('.btn-accepted').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+            const id = btn.getAttribute('data-id');
+            const page = <?= $page ?>;
+            
+            const req = await fetch(`<?= WEB_ROOT . '/request/accepted/' ?>${id}/${page}`);
+            const res = await req.json();
+
+            if (res.status === "success") {
+                toastElement.querySelector('.toast-body').textContent = res.message;
+                toastElement.querySelector('.toast-header').classList.add('bg-success', 'text-white');
+                toast.show();
+
+                const tbody = document.querySelector('table tbody');
+                tbody.innerHTML = '';
+
+                if (res.data.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td colspan="7">Không có dữ liệu</td>
+                    `;
+                    tbody.appendChild(tr);
+                } else {
+                    res.data.forEach(function (item, index) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name user">
+                                    ${item.user_name}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    ${item.book_name}
+                                </span>
+                            </td>
+                            <td>${item.quantity}</td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    ${item.create_date}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    ${item.expire_date}
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-accepted"
+                                    data-id="${item.id}"
+                                >
+                                    <i class="fa-regular fa-circle-check"></i>
+                                </button>
+                                <button
+                                    class="btn btn__action--delete btn-denied"
+                                    data-id="${item.id}"
+                                >
+                                    <i class="fa-solid fa-ban"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } else {
+                toastElement.querySelector('.toast-body').textContent = res.message;
+                toastElement.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
+                toast.show();
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-denied').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+            if (!confirm('Bạn có chắc chắn muốn từ chối yêu cầu này?')) {
+                return;
+            }
+
+            const id = btn.getAttribute('data-id');
+            const page = <?= $page ?>;
+
+            const req = await fetch(`<?= WEB_ROOT . '/request/denied/' ?>${id}/${page}`);
+            const res = await req.json();
+
+            if (res.status === "success") {
+                toastElement.querySelector('.toast-body').textContent = res.message;
+                toastElement.querySelector('.toast-header').classList.add('bg-success', 'text-white');
+                toast.show();
+
+                const tbody = document.querySelector('table tbody');
+                tbody.innerHTML = '';
+
+                if (res.data.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td colspan="7">Không có dữ liệu</td>
+                    `;
+                    tbody.appendChild(tr);
+                } else {
+                    res.data.forEach(function (item, index) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name user">
+                                    ${item.user_name}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    ${item.book_name}
+                                </span>
+                            </td>
+                            <td>${item.quantity}</td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    ${item.create_date}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
+                                    ${item.expire_date}
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-accepted"
+                                    data-id="${item.id}"
+                                >
+                                    <i class="fa-regular fa-circle-check"></i>
+                                </button>
+                                <button
+                                    class="btn btn__action--delete btn-denied"
+                                    data-id="${item.id}"
+                                >
+                                    <i class="fa-solid fa-ban"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } else {
+                toastElement.querySelector('.toast-body').textContent = res.message;
+                toastElement.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
+                toast.show();
+            }
+        });
+    });
 </script>

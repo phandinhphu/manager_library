@@ -3,19 +3,27 @@
 class Request extends Controller
 {
     private mixed $requestModel;
+    private mixed $borrowBookModel;
     private array $data = [];
 
     public function __construct()
     {
         $this->requestModel = $this->model('RequestModel');
+        $this->borrowBookModel = $this->model('BorrowBook');
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/5
+     * @param int $page
+     * @return void
+     */
     public function index($page = 1): void
     {
         if (isset($_GET['user_name'])) {
             $requests = $this->requestModel->getByCondition(['user_name' => $_GET['user_name']], '*', $page);
         } else {
-            $requests = $this->requestModel->getAll('*', $page);
+            $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name', $page);
         }
 
         $this->data['headercontent']['tab'] = 'request';
@@ -75,6 +83,72 @@ class Request extends Controller
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Phương thức không hợp lệ'
+            ]);
+        }
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/5
+     * @param int $id
+     * @param int $page
+     * @return void
+     */
+    public function accepted($id, $page): void
+    {
+        $request = $this->requestModel->getById($id)[0];
+
+        $dataIns = [
+            'user_id' => $request['user_id'],
+            'book_id' => $request['book_id'],
+            'staff_id' => $_SESSION['admin']['user_id'],
+            'borrow_date' => $request['create_date'],
+            'due_date' => $request['expire_date'],
+            'return_date' => null,
+            'book_status' => null,
+            'quantity' => $request['quantity'],
+        ];
+
+        $rs = $this->borrowBookModel->Add($dataIns);
+
+        if ($rs) {
+            $this->requestModel->Delete(['id' => $id]);
+            $requests = $this->requestModel->getAll('*', $page);
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Duyệt yêu cầu thành công',
+                'data' => $requests['data'],
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Có lỗi xảy ra. Vui lòng thử lại sau',
+            ]);
+        }
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/5
+     * @param int $id
+     * @param int $page
+     * @return void
+     */
+    public function denied($id, $page): void
+    {
+        $rs = $this->requestModel->Delete(['id' => $id]);
+
+        if ($rs) {
+            $requests = $this->requestModel->getAll('*', $page);
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Từ chối yêu cầu thành công',
+                'data' => $requests['data'],
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Có lỗi xảy ra. Vui lòng thử lại sau',
             ]);
         }
     }

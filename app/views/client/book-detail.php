@@ -284,12 +284,4 @@
             customAlert(res.message);
         }
     }
-
-
 </script>
-<?php
-echo $book['id'] . '<br/>';
-echo '<pre>';
-print_r($book);
-echo '</pre>';
-?>

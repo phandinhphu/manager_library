@@ -32,6 +32,13 @@ class RequestModel extends Model
         ];
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/5
+     * @param array $where
+     * @param string $selected
+     * @param int $page
+     */
     public function getByCondition($where = [], $selected = '*', $page = 1): array
     {
         $offset = ($page - 1) * $this->limit;
@@ -61,5 +68,16 @@ class RequestModel extends Model
             'data' => $this->db->getAll("$sql LIMIT $this->limit OFFSET $offset", $where),
             'total' => count($total)
         ];
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/5
+     * @param int $id
+     * @return false|array
+     */
+    public function getById($id): false|array
+    {
+        return $this->db->get($this->table, ['id' => $id], '*');
     }
 }
