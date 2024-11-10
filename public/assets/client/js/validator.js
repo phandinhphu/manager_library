@@ -15,7 +15,7 @@ function Validator(formSelector) {
             return regex.test(value) ? undefined : 'Trường này phải là số điện thoại';
         },
         confirmation: function(value) {
-            return value === $(formSelector).querySelector('#password').value ? undefined : 'Mật khẩu không khớp';
+            return value === $(formSelector).querySelector('#new_password').value ? undefined : 'Mật khẩu không khớp';
         },
         min: function(min) {
             return function(value) {

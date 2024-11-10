@@ -267,7 +267,7 @@ class Auth extends Controller
         } else {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $token = $_POST['token'];
-                $password = $_POST['password'];
+                $password = $_POST['new_password'];
 
                 $user = $this->authModel->getUser(['forgot_token' => $token]);
 
@@ -306,6 +306,165 @@ class Auth extends Controller
 
     /***
      * @author Phan Đình Phú
+     * @since 2024/10/11
+     * @return void
+     */
+    public function profile(): void
+    {
+        if (!isset($_SESSION['user']['user_id'])) {
+            header('location: ' . WEB_ROOT . '/dang-nhap');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $dataReq = [
+                'email' => trim($_POST['email']),
+                'username' => trim($_POST['username']),
+                'phone' => trim($_POST['phone']),
+                'cccd' => trim($_POST['cccd']),
+                'address' => trim($_POST['address']),
+            ];
+
+            $user = $this->authModel->getUser(['id' => $_SESSION['user']['user_id']]);
+
+            $checkAvatar = $this->processAvatar();
+
+            if ($checkAvatar['status'] === 'error') {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => $checkAvatar['message']
+                ]);
+                return;
+            }
+
+            // Xoá avatar cũ
+            if ($_SESSION['user']['avatar'] !== 'uploads/no-image.png' && $checkAvatar['status'] === 'success') {
+                unlink($_SESSION['user']['avatar']);
+            }
+
+            // Validate email
+            if ($this->authModel->getUser(['email' => $dataReq['email']]) && $dataReq['email'] !== $user['email']) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Email đã tồn tại'
+                ]);
+                return;
+            }
+
+            // Validate username
+            if ($this->authModel->getUser(['user_name' => $dataReq['username']]) && $dataReq['username'] !== $user['user_name']) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Tên người dùng đã tồn tại'
+                ]);
+                return;
+            }
+
+            // Validate cccd
+            if ($this->authModel->getUser(['cccd' => $dataReq['cccd']]) && $dataReq['cccd'] !== $user['cccd']) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Số căng cước công dân đã tồn tại'
+                ]);
+                return;
+            }
+
+            $dataReq['avatar'] = $checkAvatar['path'];
+            
+            $dataIns = [
+                'email' => $dataReq['email'],
+                'user_name' => $dataReq['username'],
+                'phone_number' => $dataReq['phone'],
+                'cccd' => $dataReq['cccd'],
+                'address' => $dataReq['address'],
+                'avatar' => $dataReq['avatar'],
+                'update_at' => date('Y-m-d H:i:s'),
+            ];
+            
+            $rs = $this->authModel->Update($dataIns, ['id' => $_SESSION['user']['user_id']]);
+
+            if ($rs) {
+                // Cập nhật session
+                $newUser = $this->authModel->getUser(['id' => $_SESSION['user']['user_id']]);
+                $this->updateUserSession($newUser);
+
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Cập nhật thông tin thành công. Vui lòng tải lại trang để xem thông tin mới'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Cập nhật thông tin không thành công'
+                ]);
+            }
+        } else {
+            $user = $this->authModel->getUser(['id' => $_SESSION['user']['user_id']]);
+            $this->data['subcontent']['user'] = $user;
+            $this->data['subcontent']['tab'] = 'info';
+    
+            $this->data['title'] = 'Profile';
+            $this->data['content'] = 'client/profile/info';
+    
+            $this->view('layouts/client_layout', $this->data);
+        }
+
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/11
+     * @return void
+     */
+    public function changePassword(): void
+    {
+        if (!isset($_SESSION['user']['user_id'])) {
+            header('location: ' . WEB_ROOT . '/dang-nhap');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $dataReq = [
+                'password' => trim($_POST['password']),
+                'new_password' => trim($_POST['new_password']),
+            ];
+
+            $user = $this->authModel->getUser(['id' => $_SESSION['user']['user_id']]);
+
+            if (!password_verify($dataReq['password'], $user['pass_word'])) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Mật khẩu hiện tại không đúng'
+                ]);
+                return;
+            }
+
+            $rs = $this->authModel->Update([
+                'pass_word' => password_hash($dataReq['new_password'], PASSWORD_DEFAULT),
+                'update_at' => date('Y-m-d H:i:s')
+            ], ['id' => $_SESSION['user']['user_id']]);
+
+            if ($rs) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Đổi mật khẩu thành công'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Đổi mật khẩu không thành công'
+                ]);
+            }
+        } else {
+            $this->data['subcontent']['tab'] = 'password';
+            $this->data['title'] = 'Change Password';
+            $this->data['content'] = 'client/profile/password';
+
+            $this->view('layouts/client_layout', $this->data);
+        }
+
+    }
+
+    /***
+     * @author Phan Đình Phú
      * @since 2024/10/17
      * @param $loggedInUser
      * @return void
@@ -317,6 +476,19 @@ class Auth extends Controller
         $_SESSION['user']['name'] = $loggedInUser['user_name'];
         $_SESSION['user']['avatar'] = $loggedInUser['avatar'];
         header('location: ' . WEB_ROOT . '/trang-chu');
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/10/11
+     * @param $loggedInUser
+     * @return void
+     */
+    private function updateUserSession($loggedInUser): void
+    {
+        $_SESSION['user']['email'] = $loggedInUser['email'];
+        $_SESSION['user']['name'] = $loggedInUser['user_name'];
+        $_SESSION['user']['avatar'] = $loggedInUser['avatar'];
     }
 
     /***

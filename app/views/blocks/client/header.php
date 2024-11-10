@@ -52,7 +52,7 @@
                     <li class="first__items">
                         <a
                             class="first__items-link"
-                            href="<?= WEB_ROOT . '/profile' ?>">Xin chào, <?= $_SESSION['user']['name'] ?></a>
+                            href="<?= WEB_ROOT . '/thong-tin-ca-nhan' ?>">Xin chào, <?= $_SESSION['user']['name'] ?></a>
                     </li>
                     <li class="first__items">
                         <a

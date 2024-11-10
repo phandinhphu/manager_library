@@ -10,7 +10,7 @@
                     <form id="form__auth" class="form__auth" action="" method="post">
                         <div class="form__auth-group">
                             <label
-                                for="password"
+                                for="new_password"
                                 class="form__auth-label"
                             >Mật khẩu</label
                             >
@@ -18,8 +18,8 @@
                                 type="password"
                                 class="form__auth-input"
                                 rules="required|min:6"
-                                id="password"
-                                name="password"
+                                id="new_password"
+                                name="new_password"
                                 placeholder="Nhập mật khẩu"
                             />
                             <span class="form__auth-message"></span>

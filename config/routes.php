@@ -37,7 +37,6 @@ $routes['dang-xuat'] = 'client/auth/logout';
 $routes['quen-mat-khau'] = 'client/auth/forgotPassword';
 $routes['reset-password'] = 'client/auth/resetPassword';
 $routes['kich-hoat-tai-khoan'] = 'client/auth/activeAccount';
-$routes['trang-chu'] = 'client/home';
 $routes['tra-cuu/trang-(\d+).html'] = 'client/tracuu/index/$1';
 $routes['tra-cuu'] = 'client/tracuu';
 $routes['sach/yeu-thich/(\d+)'] = 'client/books/like/$1';
@@ -46,4 +45,7 @@ $routes['sach/chi-tiet/(\d+)'] = 'client/books/detail/$1';
 $routes['danh-sach-mong-muon/trang-(\d+).html'] = 'client/books/wishlist/$1';
 $routes['danh-sach-mong-muon'] = 'client/books/wishlist';
 $routes['add-request'] = 'request/addRequest';
+$routes['thong-tin-ca-nhan'] = 'client/auth/profile';
+$routes['doi-mat-khau'] = 'client/auth/changePassword';
+$routes['trang-chu'] = 'client/home';
 // ...
