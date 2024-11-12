@@ -473,4 +473,31 @@ class BookModel extends Model
 
         return $books;
     }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/12
+     * @return array
+     */
+    public function getNewImportedBooks(): array
+    {
+        $sql = "SELECT $this->table.*, authors.author_name, publishers.publisher_name 
+                FROM $this->table, authors, publishers
+                WHERE $this->table.author_id = authors.id and $this->table.publisher_id = publishers.id
+                ORDER BY $this->table.id DESC
+                LIMIT 0, 5";
+
+        $books = $this->db->getAll($sql);
+
+        $newBooks = array_map(function ($book) {
+            $categories = $this->db->getAll("SELECT category_name FROM book_categories, category
+                                            WHERE book_categories.category_id = category.id
+                                            and book_id = :book_id", ['book_id' => $book['id']]);
+            $book['categories'] = implode(', ', array_column($categories, 'category_name'));
+
+            return $book;
+        }, $books);
+
+        return $newBooks;
+    }
 }

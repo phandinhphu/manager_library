@@ -18,6 +18,12 @@ $routes['quan-tri/books/trang-(\d+).html'] = 'admin/books/index/$1';
 $routes['quan-tri/books'] = 'admin/books';
 $routes['quan-tri/yeu-cau-muon-sach/trang-(\d+).html'] = 'request/$1';
 $routes['quan-tri/yeu-cau-muon-sach'] = 'request';
+$routes['quan-tri/quan-ly-tai-khoan/get-account/(\d+)'] = 'admin/account/getAccount/$1';
+$routes['quan-tri/quan-ly-tai-khoan/them-tai-khoan'] = 'admin/account/addAccount';
+$routes['quan-tri/quan-ly-tai-khoan/sua-tai-khoan/(\d+)'] = 'admin/account/editAccount/$1';
+$routes['quan-tri/quan-ly-tai-khoan/xoa-tai-khoan/(\d+)'] = 'admin/account/deleteAccount/$1';
+$routes['quan-tri/quan-ly-tai-khoan/trang-(\d+).html'] = 'admin/account/$1';
+$routes['quan-tri/quan-ly-tai-khoan'] = 'admin/account';
 
 // Category
 $routes['quan-tri/quan-ly-the-loai/trang-(\d+).html'] = 'admin/category/index/$1';

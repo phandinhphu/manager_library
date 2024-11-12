@@ -210,6 +210,7 @@
                     let html = '';
                     res.data.forEach(function (item, index) {
                         html += `
+                        <tr>
                             <td>${index + 1}</td>
                             <td>
                                 <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name user">
@@ -246,6 +247,7 @@
                                     <i class="fa-solid fa-ban"></i>
                                 </button>
                             </td>
+                        </tr>
                         `;
                     });
                     tbody.innerHTML = html;
