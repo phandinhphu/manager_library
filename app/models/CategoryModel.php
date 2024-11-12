@@ -88,55 +88,6 @@ class CategoryModel extends Model
     }
 
     /**
-     * Thêm thể loại
-     * @param mixed $data
-     * @return bool|PDOStatement
-     * @author Trần Duy Vương
-     * @since 2024-11-01
-     */
-    public function insert($data = [])
-    {
-        if (empty($data)) {
-            return false;
-        }
-        if ($this->check(['category_name' => $data['category_name']])) {
-            return false;
-        }
-        return $this->db->insert($this->table, $data);
-    }
-
-    /**
-     * Cập nhật thể loại
-     * @param mixed $data
-     * @param mixed $where
-     * @return false|PDOStatement
-     * @author Trần Duy Vương
-     * @since 2024-11-01
-     */
-    public function update($data = [], $where = []): false|PDOStatement
-    {
-        if (empty($data)) {
-            return false;
-        }
-        if ($this->check(['category_name' => $data['category_name']])) {
-            return false;
-        }
-        return $this->db->update($this->table, $data, $where);
-    }
-
-    /**
-     * Xóa thể loại
-     * @param mixed $where
-     * @return false|PDOStatement
-     * @author Trần Duy Vương
-     * @since 2024-11-01
-     */
-    public function delete($where = []): false|PDOStatement
-    {
-        return $this->db->delete($this->table, $where);
-    }
-
-    /**
      * Lấy các cột của bảng
      * @param mixed $table
      * @return array

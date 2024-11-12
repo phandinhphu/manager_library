@@ -31,7 +31,6 @@ class Category extends Controller
         $this->data['subcontent']['total_pages'] = $this->categoryModel->getTotalPage($categories['total']);
         $this->data['subcontent']['page'] = $page;
         $this->data['subcontent']['url_page'] = WEB_ROOT . '/quan-tri/quan-ly-the-loai/trang-';
-        $this->data['subcontent']['script'] = 'category';
 
         $this->data['title'] = 'Quản lý thể loại';
         $this->data['content'] = 'admin/category';
@@ -84,8 +83,12 @@ class Category extends Controller
             $data = [
                 'category_name' => $_POST['name']
             ];
-
-            $result = $this->categoryModel->insert($data);
+            if ($this->categoryModel->check(['category_name' => $data['category_name']])) {
+                $this->response(0, 'Thể loại đã tồn tại!');
+                return;
+            }
+            
+            $result = $this->categoryModel->Add($data);
 
             $success = $result ? 1 : 0;
             $message = $result ? 'Thêm thể loại thành công!' : 'Thêm thể loại thất bại!';
@@ -111,7 +114,11 @@ class Category extends Controller
                 'category_name' => $_POST['name']
             ];
             $where = ['id' => $_POST['id']];
-            $result = $this->categoryModel->update($data, $where);
+            if ($this->categoryModel->check(['category_name' => $data['category_name']])) {
+                $this->response(0, 'Thể loại đã tồn tại!');
+                return;
+            }
+            $result = $this->categoryModel->Update($data, $where);
 
             $success = $result ? 1 : 0;
             $message = $result ? 'Cập nhật thể loại thành công!' : 'Cập nhật thể loại thất bại!';
@@ -134,7 +141,7 @@ class Category extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
-            $result = $this->categoryModel->delete(['id' => $id]);
+            $result = $this->categoryModel->Delete(['id' => $id]);
 
             $success = $result ? 1 : 0;
             $message = $result ? 'Xóa thể loại thành công!' : 'Xóa thể loại thất bại!';
@@ -171,7 +178,6 @@ class Category extends Controller
             $this->data['subcontent']['total_pages'] = $this->categoryModel->getTotalPage($categories['total'] ?? 0);
             $this->data['subcontent']['page'] = $page;
             $this->data['subcontent']['url_page'] = WEB_ROOT . '/quan-tri/quan-ly-the-loai/trang-';
-            $this->data['subcontent']['script'] = 'category';
 
             $this->data['title'] = 'Quản lý thể loại';
             $this->data['content'] = 'admin/category';
