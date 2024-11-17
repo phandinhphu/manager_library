@@ -235,6 +235,13 @@
         toastContainer.classList.remove('top-100');
         toastContainer.classList.add('top-0');
         toastElement.querySelector('.toast-body').textContent = message;
+
+        if (type === 'success') {
+            toastElement.querySelector('.toast-header').classList.remove('bg-danger', 'text-white');
+        } else {
+            toastElement.querySelector('.toast-header').classList.remove('bg-success', 'text-white');
+        }
+
         toastElement.querySelector('.toast-header').classList.add(`bg-${type}`, 'text-white');
         toast.show();
     }
@@ -338,5 +345,17 @@
             width: "100%",
             minimumResultsForSearch: -1,
         });
+    });
+</script>
+
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    var tooltipList = tooltipTriggerList.map(function (
+        tooltipTriggerEl
+    ) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 </script>

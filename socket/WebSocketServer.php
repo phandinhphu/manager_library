@@ -14,6 +14,7 @@ class WebSocketServer implements MessageComponentInterface
 {
     protected SplObjectStorage $clients;
     protected array $bookRooms;
+    protected array $userRooms;
     public mixed $commentModel = null;
 
     public function __construct()
@@ -21,6 +22,7 @@ class WebSocketServer implements MessageComponentInterface
         $this->clients = new \SplObjectStorage;
         $this->commentModel = CommentModel::getInstance();
         $this->bookRooms = [];
+        $this->userRooms = [];
     }
 
     function onOpen(ConnectionInterface $conn): void
@@ -47,11 +49,17 @@ class WebSocketServer implements MessageComponentInterface
     {
         // TODO: Implement onMessage() method.
         $data = json_decode($msg);
-        $bookId = $data->book_id;
+        $bookId = $data->book_id ?? null;
+        $userId = $data->user_id ?? null;
 
         // Nếu tin nhắn là một yêu cầu theo dõi
         if (isset($data->action) && $data->action === 'subscribe') {
             $this->bookRooms[$bookId][] = $from;
+        }
+
+        // Nếu tin nhắn là một yêu cầu tham gia
+        if (isset($data->action) && $data->action === 'join') {
+            $this->userRooms[$userId][] = $from;
         }
 
         // Nếu tin nhắn là một binh luận mới
@@ -73,6 +81,18 @@ class WebSocketServer implements MessageComponentInterface
                     'username' => $data->username,
                     'avatar' => $data->avatar,
                     'created_at' => $data->created_at
+                ]));
+            }
+        }
+
+        // Nếu tin nhắn là một thông báo
+        if (isset($data->action) && $data->action === 'notify') {
+            // Gửi thông báo đến người dùng dựa theo id
+            foreach ($this->userRooms[$userId] as $client) {
+                $client->send(json_encode([
+                    'action' => 'notify',
+                    'type' => $data->type,
+                    'message' => $data->message
                 ]));
             }
         }

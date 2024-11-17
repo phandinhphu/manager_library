@@ -23,7 +23,7 @@ class Request extends Controller
         if (isset($_GET['user_name'])) {
             $requests = $this->requestModel->getByCondition(['user_name' => $_GET['user_name']], '*', $page);
         } else {
-            $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name', $page);
+            $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name, u.id as user_id', $page);
         }
 
         $this->data['headercontent']['tab'] = 'request';

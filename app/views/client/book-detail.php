@@ -88,7 +88,7 @@
                                     alt="Ảnh đại diện"
                                 />
                                 <div class="comment__user-info">
-                                    <h5 class="comment__user-name"><?= $comment['user_name'] ?></h5>
+                                    <h5 class="comment__user-name"><?= $comment['user_name'] === $_SESSION['user']['name'] ? 'Bạn' : $comment['user_name'] ?></h5>
                                     <p class="comment__user-date"><?= $comment['created_at'] ?></p>
                                 </div>
                             </div>
@@ -181,6 +181,7 @@
     conn.onmessage = (e) => {
         // Hiển thị comment nhận được
         var newComment = JSON.parse(e.data);
+        var currUser = "<?= $_SESSION['user']['name'] ?? '' ?>";
         console.log(newComment);
 
         if (newComment.action === 'newcomment' && newComment.book_id === bookId)
@@ -193,7 +194,7 @@
                         alt="Ảnh đại diện"
                     />
                     <div class="comment__user-info">
-                        <h5 class="comment__user-name">${newComment.username}</h5>
+                        <h5 class="comment__user-name">${currUser != '' && currUser === newComment.username ? 'Bạn' : newComment.username}</h5>
                         <p class="comment__user-date">${newComment.created_at}</p>
                     </div>
                 </div>
@@ -226,6 +227,8 @@
             toastContainer.classList.remove('top-100');
             toastContainer.classList.add('top-0');
             toastElement.querySelector('.toast-body').textContent = 'Bạn cần đăng nhập để thực hiện chức năng này';
+
+            toastElement.querySelector('.toast-header').classList.remove('bg-success');
             toastElement.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
             toast.show();
         }
@@ -244,6 +247,14 @@
         toastContainer.classList.remove('top-100');
         toastContainer.classList.add('top-0');
         toastElement.querySelector('.toast-body').textContent = message;
+
+        // remove class by type
+        if (type === 'danger') {
+            toastElement.querySelector('.toast-header').classList.remove('bg-success');
+        } else {
+            toastElement.querySelector('.toast-header').classList.remove('bg-danger');
+        }
+
         toastElement.querySelector('.toast-header').classList.add(`bg-${type}`, 'text-white');
         toast.show();
     }
