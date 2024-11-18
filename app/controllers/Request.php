@@ -9,7 +9,7 @@ class Request extends Controller
     public function __construct()
     {
         $this->requestModel = $this->model('RequestModel');
-        $this->borrowBookModel = $this->model('BorrowBook');
+        $this->borrowBookModel = $this->model('BorrowBookModel');
     }
 
     /***

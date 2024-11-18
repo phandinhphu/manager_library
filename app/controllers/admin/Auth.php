@@ -152,16 +152,6 @@ class Auth extends Controller
 
     }
 
-    public function forgotPassword(): void
-    {
-        $this->view('client/auth/forgot-password');
-    }
-
-    public function resetPassword(): void
-    {
-        $this->view('client/auth/reset-password');
-    }
-
     /***
      * @author Phan Đình Phú
      * @since 2024/10/17

@@ -11,7 +11,7 @@ class Home extends Controller
     {
         $this->bookModel = $this->model('BookModel');
         $this->fineModel = $this->model('FineModel');
-        $this->borrowBookModel = $this->model('BorrowBook');
+        $this->borrowBookModel = $this->model('BorrowBookModel');
     }
 
     public function index(): void
