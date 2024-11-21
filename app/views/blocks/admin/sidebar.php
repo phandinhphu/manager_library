@@ -72,7 +72,7 @@
                     <li class="sidebar__sub-item">
                         <a
                             class="sidebar__sub-item-link"
-                            href="<?= WEB_ROOT . '/quan-tri/reader-statistics' ?>"
+                            href="<?= WEB_ROOT . '/quan-tri/thong-ke-doc-gia' ?>"
                         >Reader</a
                         >
                     </li>
@@ -80,7 +80,7 @@
                     <li class="sidebar__sub-item">
                         <a
                             class="sidebar__sub-item-link"
-                            href="<?= WEB_ROOT . '/quan-tri/books-statistics' ?>"
+                            href="<?= WEB_ROOT . '/quan-tri/thong-ke-sach' ?>"
                         >Books</a
                         >
                     </li>

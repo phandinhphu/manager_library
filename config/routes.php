@@ -26,6 +26,8 @@ $routes['quan-tri/quan-ly-tai-khoan/trang-(\d+).html'] = 'admin/account/$1';
 $routes['quan-tri/quan-ly-tai-khoan'] = 'admin/account';
 $routes['quan-tri/danh-sach-sach-muon/trang-(\d+).html'] = 'admin/borrowbook/index/$1';
 $routes['quan-tri/danh-sach-sach-muon'] = 'admin/borrowbook';
+$routes['quan-tri/thong-ke-sach/trang-(\d+).html'] = 'admin/statistic/book/$1';
+$routes['quan-tri/thong-ke-sach'] = 'admin/statistic/book';
 
 // Category
 $routes['quan-tri/quan-ly-the-loai/trang-(\d+).html'] = 'admin/category/index/$1';

@@ -3,6 +3,7 @@ class BookModel extends Model
 {
     public string $table = 'books';
     public string $tableBookActions = 'user_book_actions';
+    public string $tableBorrowBooks = 'borrowbooks';
 
     public function __construct()
     {
@@ -16,7 +17,28 @@ class BookModel extends Model
      */
     public function getAllBooks(): array
     {
-        return $this->getAll('*', 'all');
+        $sql = "SELECT $this->table.*, authors.author_name as author_name, publishers.publisher_name as publisher_name
+                FROM $this->table, authors, publishers
+                WHERE $this->table.author_id = authors.id and $this->table.publisher_id = publishers.id";
+
+        $books = $this->db->getAll($sql);
+
+        $newBooks = array_map(function ($book) {
+            $categories = $this->db->getAll("SELECT category_name FROM book_categories, category
+                                            WHERE book_categories.category_id = category.id 
+                                            and book_id = :book_id", ['book_id' => $book['id']]);
+
+            $book['categories'] = implode(', ', array_column($categories, 'category_name'));
+
+            return $book;
+        }, $books);
+
+        $total = count($newBooks);
+
+        return [
+            'data' => $newBooks,
+            'total' => $total
+        ];
     }
 
     /***
@@ -499,5 +521,37 @@ class BookModel extends Model
         }, $books);
 
         return $newBooks;
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/21
+     * @return array
+     */
+    public function statistic($condition = [], $page = 1): array
+    {
+        if (!empty($condition)) {
+            $books = $this->searchBooks($condition, $page);
+        } else {
+            $books = $this->getBooksByPage($page);
+        }
+
+        $newBooks = array_map(function ($book) {
+            $quantityBorrow = $this->db->getOne("SELECT SUM(quantity) as total
+                                                FROM $this->tableBorrowBooks bb
+                                                WHERE book_id = :book_id AND bb.return_date IS NULL AND
+                                                bb.book_status IS NULL", ['book_id' => $book['id']]);
+
+            $book['quantity_borrow'] = $quantityBorrow['total'] ?? 0;
+            
+            return $book;
+        }, $books['data']);
+
+        $totalBooks = $books['total'];
+
+        return [
+            'data' => $newBooks,
+            'total' => $totalBooks
+        ];
     }
 }
