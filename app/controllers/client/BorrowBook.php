@@ -2,15 +2,11 @@
 class BorrowBook extends Controller {
 
     private mixed $user_id;
-
-    private mixed $bookModel;
     private mixed $borrowBookModel;
     private array $data = [];
 
     public function __construct()
     {
-        
-        $this->bookModel = $this->model('BookModel');
         $this->borrowBookModel = $this->model('BorrowBookModel');
     }
 
@@ -34,6 +30,13 @@ class BorrowBook extends Controller {
         $this->view('layouts/client_layout', $this->data);
     }
 
+    /**
+     * Tìm kiếm sách mượn
+     * @param int $page
+     * @return void
+     * @author Trần Duy Vương
+     * @since 2024-11-13
+     */
     public function search(int $page = 1): void
     {
         if (!isset($_SESSION['user']['user_id'])) {
@@ -65,8 +68,6 @@ class BorrowBook extends Controller {
             if (isset($_GET['sort']) && $_GET['sort'] != '') {
                 $orderBy = $_GET['sort'];
             }
-
-
 
             $borrowed_books = $this->borrowBookModel->search($where, $orderBy, $status, $page);
 
