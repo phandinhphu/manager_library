@@ -55,7 +55,7 @@
                     <li class="sidebar__sub-item">
                         <a
                             class="sidebar__sub-item-link"
-                            href="<?= WEB_ROOT . '/quan-tri/list-borrow-books' ?>">List borrow books</a>
+                            href="<?= WEB_ROOT . '/quan-tri/danh-sach-sach-muon' ?>">List borrow books</a>
                     </li>
                 </ul>
             </li>

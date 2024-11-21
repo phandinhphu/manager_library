@@ -33,6 +33,24 @@
     />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/client/css/grid.css' ?>" />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/client/css/style.css' ?>" />
+
+    <style>
+        .text-truncate {
+            max-width: 150px; /* Adjust the width as needed */
+        }
+
+        .tooltip-inner {
+            font-size: 1.6rem;  /* Tăng kích thước font chữ */
+            padding: 0.8rem;     /* Điều chỉnh khoảng cách */
+        }
+
+        @media (max-width: 63.9375em) {
+            .text-truncate {
+                max-width: 78px; /* Adjust the width as needed */
+            }
+        }
+    </style>
+
     <style>
         .select2-container .select2-selection--single {
             font-size: 1.6rem; /* Kích thước font của hộp lựa chọn */
@@ -70,3 +88,53 @@
     </div>
 </body>
 </html>
+
+<div class="toast-container position-fixed top-100 end-0 p-3">
+    <div id="myToast" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto" style="font-size: 1.6rem">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" style="font-size: 1.5rem">
+            Đây là nội dung thông báo.
+        </div>
+    </div>
+</div>
+
+<script>
+    var con = new WebSocket('ws://localhost:8081');
+
+    const toastContainerNotify = document.querySelector('.toast-container');
+    const toastElementNotify = document.querySelector('.toast');
+    const toastNotify = new bootstrap.Toast(toastElementNotify, {
+        autohide: true,
+        delay: 3000
+    });
+
+    con.onopen = function(e) {
+        console.log('Kết nối thành công');
+        con.send(JSON.stringify({
+            action: 'join',
+            user_id: <?= $_SESSION['user']['user_id'] ?>
+        }));
+    };
+
+    con.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.action === 'notify') {
+            if (data.type === 'accepted') {
+                toastContainerNotify.classList.remove('top-100');
+                toastContainerNotify.classList.add('top-0');
+                toastElementNotify.querySelector('.toast-body').textContent = data.message;
+                toastElementNotify.querySelector('.toast-header').classList.add('bg-success', 'text-white');
+                toastNotify.show();
+            } else {
+                toastContainerNotify.classList.remove('top-100');
+                toastContainerNotify.classList.add('top-0');
+                toastElementNotify.querySelector('.toast-body').textContent = data.message;
+                toastElementNotify.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
+                toastNotify.show();
+            }
+        }
+    };
+</script>

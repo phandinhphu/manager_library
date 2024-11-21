@@ -101,14 +101,16 @@
                                     <button
                                         class="btn btn-accepted"
                                         data-id="<?= $request['id'] ?>"
+                                        data-user="<?= $request['user_id'] ?>"
                                     >
-                                        <i class="fa-regular fa-circle-check"></i>
+                                        <i class="fa-regular fa-circle-check btn-accepted"></i>
                                     </button>
                                     <button
                                         class="btn btn__action--delete btn-denied"
                                         data-id="<?= $request['id'] ?>"
+                                        data-user="<?= $request['user_id'] ?>"
                                     >
-                                        <i class="fa-solid fa-ban"></i>
+                                        <i class="fa-solid fa-ban btn-denied"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -155,7 +157,7 @@
     </div>
 </div>
 
-<div class="toast-container position-fixed top-0 end-0 p-3">
+<div class="toast-container position-fixed top-100 end-0 p-3">
     <div id="myToast" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
             <strong class="me-auto" style="font-size: 1.6rem">Thông báo</strong>
@@ -176,167 +178,120 @@
 </script>
 
 <script>
+    const toastContainer = document.querySelector('.toast-container');
     const toastElement = document.getElementById('myToast');
     const toast = new bootstrap.Toast(toastElement, {
         autohide: true,
         delay: 3000
     });
 
-    document.querySelector('tbody').addEventListener('click', async function(e) {
+    const customAlert = (message, type = 'danger') => {
+        toastContainer.classList.remove('top-100');
+        toastContainer.classList.add('top-0');
+        toastElement.querySelector('.toast-body').textContent = message;
+
+        if (type === 'success') {
+            toastElement.querySelector('.toast-header').classList.remove('bg-danger', 'text-white');
+        } else {
+            toastElement.querySelector('.toast-header').classList.remove('bg-success', 'text-white');
+        }
+
+        toastElement.querySelector('.toast-header').classList.add(`bg-${type}`, 'text-white');
+        toast.show();
+    }
+
+    document.querySelector('tbody').addEventListener('click', async function(event) {
         if (event.target.classList.contains('btn-accepted')) {
+            var con = new WebSocket('ws://localhost:8081');
+            con.onopen = function() {
+                console.log('Kết nối thành công', user);
+                con.send(JSON.stringify({
+                    action: 'join',
+                    user_id: user
+                }));
+            };
+
             // Lấy ID hoặc thông tin cần thiết từ nút xóa
-            const id = event.target.dataset.id;
+            const id = event.target.closest('button').dataset.id;
+            const user = event.target.closest('button').dataset.user;
             // Thực hiện thao tác xóa với fetch
             const page = <?= $page ?>;
             
             const req = await fetch(`<?= WEB_ROOT . '/request/accepted/' ?>${id}/${page}`);
             const res = await req.json();
 
+
             if (res.status === "success") {
-                toastElement.querySelector('.toast-body').textContent = res.message;
-                toastElement.querySelector('.toast-header').classList.add('bg-success', 'text-white');
-                toast.show();
+                customAlert(res.message, 'success');
 
-                const tbody = document.querySelector('table tbody');
-                tbody.innerHTML = '';
+                const row = event.target.closest('tr');
+                const bookName = row.querySelector('td:nth-child(3)').textContent;
+                row.remove();
 
-                if (res.data.length === 0) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td colspan="7">Không có dữ liệu</td>
-                    `;
-                    tbody.appendChild(tr);
-                } else {
-                    let html = '';
-                    res.data.forEach(function (item, index) {
-                        html += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name user">
-                                    ${item.user_name}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
-                                    ${item.book_name}
-                                </span>
-                            </td>
-                            <td>${item.quantity}</td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
-                                    ${item.create_date}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
-                                    ${item.expire_date}
-                                </span>
-                            </td>
-                            <td>
-                                <button
-                                    class="btn btn-accepted"
-                                    data-id="${item.id}"
-                                >
-                                    <i class="fa-regular fa-circle-check"></i>
-                                </button>
-                                <button
-                                    class="btn btn__action--delete btn-denied"
-                                    data-id="${item.id}"
-                                >
-                                    <i class="fa-solid fa-ban"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        `;
-                    });
-                    tbody.innerHTML = html;
-                }
+                setTimeout(() => {
+                    con.send(JSON.stringify({
+                        action: 'notify',
+                        type: 'accepted',
+                        message: `Yêu cầu mượn sách ${bookName} cuả bạn đã được chấp nhận.`,
+                        user_id: user
+                    }));
+                }, 1000);
             } else {
-                toastElement.querySelector('.toast-body').textContent = res.message;
-                toastElement.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
-                toast.show();
+                customAlert(res.message);
             }
+
+            con.onclose = function() {
+                console.log('Connection closed');
+                clearTimeout();
+            };
         }
     });
 
-    document.querySelector('tbody').addEventListener('click', async function(e) {
+    document.querySelector('tbody').addEventListener('click', async function(event) {
         if (event.target.classList.contains('btn-denied')) {
+            var con = new WebSocket('ws://localhost:8081');
             if (!confirm('Bạn có chắc chắn muốn từ chối yêu cầu này?')) {
                 return;
             }
 
+            con.onopen = function() {
+                console.log('Kết nối thành công', user);
+                con.send(JSON.stringify({
+                    action: 'join',
+                    user_id: user
+                }));
+            };
+
             // Lấy ID hoặc thông tin cần thiết từ nút xóa
-            const id = event.target.dataset.id;
+            const id = event.target.closest('button').dataset.id;
+            const user = event.target.closest('button').dataset.user;
             const page = <?= $page ?>;
 
             // Thực hiện thao tác xóa với fetch
             const req = await fetch(`<?= WEB_ROOT . '/request/denied/' ?>${id}/${page}`);
             const res = await req.json();
+
     
             if (res.status === "success") {
-                toastElement.querySelector('.toast-body').textContent = res.message;
-                toastElement.querySelector('.toast-header').classList.add('bg-success', 'text-white');
-                toast.show();
+                customAlert(res.message, 'success');
     
-                const tbody = document.querySelector('table tbody');
-                tbody.innerHTML = '';
-    
-                if (res.data.length === 0) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td colspan="7">Không có dữ liệu</td>
-                    `;
-                    tbody.appendChild(tr);
-                } else {
-                    res.data.forEach(function (item, index) {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name user">
-                                    ${item.user_name}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
-                                    ${item.book_name}
-                                </span>
-                            </td>
-                            <td>${item.quantity}</td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
-                                    ${item.create_date}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="d-block text-truncate" data-bs-toggle="tooltip" title="Name book">
-                                    ${item.expire_date}
-                                </span>
-                            </td>
-                            <td>
-                                <button
-                                    class="btn btn-accepted"
-                                    data-id="${item.id}"
-                                >
-                                    <i class="fa-regular fa-circle-check"></i>
-                                </button>
-                                <button
-                                    class="btn btn__action--delete btn-denied"
-                                    data-id="${item.id}"
-                                >
-                                    <i class="fa-solid fa-ban"></i>
-                                </button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                }
+                const row = event.target.closest('tr');
+                const bookName = row.querySelector('td:nth-child(3)').textContent;
+                row.remove();
+
+                con.send(JSON.stringify({
+                    action: 'notify',
+                    type: 'denied',
+                    message: `Yêu cầu mượn sách ${bookName} cuả bạn đã bị từ chối.`,
+                    user_id: user
+                }));
             } else {
-                toastElement.querySelector('.toast-body').textContent = res.message;
-                toastElement.querySelector('.toast-header').classList.add('bg-danger', 'text-white');
-                toast.show();
+                customAlert(res.message);
             }
+
+            con.onclose = function() {
+                console.log('Connection closed');
+            };
         }
     });
 </script>

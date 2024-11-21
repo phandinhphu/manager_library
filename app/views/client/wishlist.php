@@ -4,6 +4,7 @@
             <div class="col l-12 component">
                 <div class="title">
                     <h2 class="title__text">Wish List</h2>
+                    <h3 style="color: red;">(*Lưu ý: Mỗi cuốn sách bạn chỉ được mượn tối đa là 2 cuốn)</h3>
                 </div>
                 <div class="component__content">
                     <div class="component">
@@ -114,7 +115,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($books_wishlist as $key => $book) : ?>
+                            <?php if (empty($books_wishlist)) : ?>
+                                <tr>
+                                    <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                </tr>
+                            <?php else : 
+                                foreach ($books_wishlist as $key => $book) : 
+                            ?>
                                 <tr>
                                     <td><?= $key + 1 ?></td>
                                     <td>
@@ -150,6 +157,9 @@
                                             type="number"
                                             name="quantity"
                                             class="form__filter-input quantity"
+                                            min="1"
+                                            max="<?= $book['quantity'] ?>"
+                                            value="1"
                                         />
                                     </td>
                                     <td>
@@ -173,6 +183,7 @@
                                     </button>
                                 </td>
                             </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
 
@@ -235,6 +246,13 @@
         toastContainer.classList.remove('top-100');
         toastContainer.classList.add('top-0');
         toastElement.querySelector('.toast-body').textContent = message;
+
+        if (type === 'success') {
+            toastElement.querySelector('.toast-header').classList.remove('bg-danger', 'text-white');
+        } else {
+            toastElement.querySelector('.toast-header').classList.remove('bg-success', 'text-white');
+        }
+
         toastElement.querySelector('.toast-header').classList.add(`bg-${type}`, 'text-white');
         toast.show();
     }
@@ -264,6 +282,7 @@
                 const bookId = book.querySelector('.btn-remove').getAttribute('data-book-id');
                 const returnDate = book.querySelector('.return_date').value;
                 const quantity = book.querySelector('.quantity').value;
+                const maxQuantity = book.querySelector('.quantity').max;
 
                 const checkReturnDate = new Date(returnDate);
                 const today = new Date();
@@ -277,6 +296,18 @@
 
                 if (returnDate === '' || quantity === '') {
                     customAlert('Vui lòng nhập đầy đủ thông tin');
+                    data = [];
+                    return;
+                }
+
+                if (parseInt(quantity) > parseInt(maxQuantity)) {
+                    customAlert('Số lượng mượn không được lớn hơn số lượng sách');
+                    data = [];
+                    return;
+                }
+
+                if (parseInt(quantity) > 2) {
+                    customAlert('Mỗi cuốn sách bạn chỉ được mượn tối đa 2 cuốn');
                     data = [];
                     return;
                 }
@@ -338,5 +369,17 @@
             width: "100%",
             minimumResultsForSearch: -1,
         });
+    });
+</script>
+
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    var tooltipList = tooltipTriggerList.map(function (
+        tooltipTriggerEl
+    ) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 </script>

@@ -24,6 +24,8 @@ $routes['quan-tri/quan-ly-tai-khoan/sua-tai-khoan/(\d+)'] = 'admin/account/editA
 $routes['quan-tri/quan-ly-tai-khoan/xoa-tai-khoan/(\d+)'] = 'admin/account/deleteAccount/$1';
 $routes['quan-tri/quan-ly-tai-khoan/trang-(\d+).html'] = 'admin/account/$1';
 $routes['quan-tri/quan-ly-tai-khoan'] = 'admin/account';
+$routes['quan-tri/danh-sach-sach-muon/trang-(\d+).html'] = 'admin/borrowbook/index/$1';
+$routes['quan-tri/danh-sach-sach-muon'] = 'admin/borrowbook';
 
 // Category
 $routes['quan-tri/quan-ly-the-loai/trang-(\d+).html'] = 'admin/category/index/$1';

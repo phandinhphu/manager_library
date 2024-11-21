@@ -2,14 +2,16 @@
 
 class Request extends Controller
 {
+    private mixed $bookModel;
     private mixed $requestModel;
     private mixed $borrowBookModel;
     private array $data = [];
 
     public function __construct()
     {
+        $this->bookModel = $this->model('BookModel');
         $this->requestModel = $this->model('RequestModel');
-        $this->borrowBookModel = $this->model('BorrowBook');
+        $this->borrowBookModel = $this->model('BorrowBookModel');
     }
 
     /***
@@ -23,7 +25,7 @@ class Request extends Controller
         if (isset($_GET['user_name'])) {
             $requests = $this->requestModel->getByCondition(['user_name' => $_GET['user_name']], '*', $page);
         } else {
-            $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name', $page);
+            $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name, u.id as user_id', $page);
         }
 
         $this->data['headercontent']['tab'] = 'request';
@@ -109,9 +111,13 @@ class Request extends Controller
             'quantity' => $request['quantity'],
         ];
 
-        $rs = $this->borrowBookModel->Add($dataIns);
+        $book = $this->bookModel->getBookById($request['book_id']);
+        $newQuantity = $book['quantity'] - $request['quantity'];
 
-        if ($rs) {
+        $rsAdd = $this->borrowBookModel->Add($dataIns);
+        $rsUpdate = $this->bookModel->Update(['quantity' => $newQuantity], ['id' => $request['book_id']]);
+
+        if ($rsAdd && $rsUpdate) {
             $this->requestModel->Delete(['id' => $id]);
             $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name', $page);
             echo json_encode([

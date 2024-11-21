@@ -376,7 +376,7 @@ class BookModel extends Model
 
         $book = $this->getBookById($bookId);
 
-        if (!in_array($book, $_SESSION['books']['wishlist'])) {
+        if (!in_array($book, $_SESSION['books']['wishlist']) && $book['quantity'] > 0) {
             $_SESSION['books']['wishlist'][] = $book;
             return true;
         }
