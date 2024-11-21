@@ -2,12 +2,14 @@
 
 class Request extends Controller
 {
+    private mixed $bookModel;
     private mixed $requestModel;
     private mixed $borrowBookModel;
     private array $data = [];
 
     public function __construct()
     {
+        $this->bookModel = $this->model('BookModel');
         $this->requestModel = $this->model('RequestModel');
         $this->borrowBookModel = $this->model('BorrowBookModel');
     }
@@ -109,9 +111,13 @@ class Request extends Controller
             'quantity' => $request['quantity'],
         ];
 
-        $rs = $this->borrowBookModel->Add($dataIns);
+        $book = $this->bookModel->getBookById($request['book_id']);
+        $newQuantity = $book['quantity'] - $request['quantity'];
 
-        if ($rs) {
+        $rsAdd = $this->borrowBookModel->Add($dataIns);
+        $rsUpdate = $this->bookModel->Update(['quantity' => $newQuantity], ['id' => $request['book_id']]);
+
+        if ($rsAdd && $rsUpdate) {
             $this->requestModel->Delete(['id' => $id]);
             $requests = $this->requestModel->getAll('r.*, b.book_name, u.user_name', $page);
             echo json_encode([

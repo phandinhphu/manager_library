@@ -37,7 +37,7 @@ class BorrowBookModel extends Model
             FROM $this->table bb
             JOIN books b ON bb.book_id = b.id
             JOIN authors a ON b.author_id = a.id
-            WHERE bb.user_id = :user_id
+            WHERE bb.user_id = :user_id AND bb.return_date IS NULL AND bb.book_status IS NULL
         ";
         return $this->db->query($sql, $where)->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -71,7 +71,7 @@ class BorrowBookModel extends Model
                 FROM $this->table bb
                 JOIN books b ON bb.book_id = b.id
                 JOIN authors a ON b.author_id = a.id
-                WHERE bb.user_id = :user_id
+                WHERE bb.user_id = :user_id AND bb.return_date IS NULL AND bb.book_status IS NULL
             ) AS combined LIMIT $offset, $this->limit
         ";
         $borrowed_books = $this->db->query($sql, $where)->fetchAll(PDO::FETCH_ASSOC);
@@ -150,7 +150,7 @@ class BorrowBookModel extends Model
             FROM $this->table bb
             JOIN books b ON bb.book_id = b.id
             JOIN authors a ON b.author_id = a.id
-            WHERE $conditions
+            WHERE $conditions AND bb.return_date IS NULL AND bb.book_status IS NULL
             ";
         if($status == 0)
             $sql = "SELECT * FROM ($sql1 UNION ALL $sql2) AS combined ORDER BY $orderBy LIMIT $offset, $this->limit";

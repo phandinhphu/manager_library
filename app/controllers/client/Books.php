@@ -126,7 +126,7 @@ class Books extends Controller
                     } else {
                         echo json_encode([
                             'status' => 'error',
-                            'message' => 'Bạn đã thêm sách này vào danh sách mong muốn rồi'
+                            'message' => 'Bạn đã thêm sách này vào danh sách mong muốn hoặc số lượng sách đã hết'
                         ]);
                     }
                 }
