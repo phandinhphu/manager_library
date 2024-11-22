@@ -1,4 +1,9 @@
 <?php
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class BookModel extends Model
 {
     public string $table = 'books';
@@ -68,7 +73,7 @@ class BookModel extends Model
             return $book;
         }, $books);
 
-        $total = count($this->getAllBooks());
+        $total = $this->getAllBooks()['total'];
 
         return [
             'data' => $newBooks,
@@ -553,5 +558,178 @@ class BookModel extends Model
             'data' => $newBooks,
             'total' => $totalBooks
         ];
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/21
+     * @return void
+     */
+    public function exportExcelAllBooks(): void
+    {
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setTitle('Thống kê toàn bộ sách');
+
+        $sheet->setCellValue('A1', 'Mã ISBN')
+            ->setCellValue('B1', 'Tên sách')
+            ->setCellValue('C1', 'Tác giả')
+            ->setCellValue('D1', 'Nhà xuất bản')
+            ->setCellValue('E1', 'Năm xuất bản')
+            ->setCellValue('F1', 'Thể loại')
+            ->setCellValue('G1', 'Số lượng mượn')
+            ->setCellValue('H1', 'Số lượng tồn')
+            ->setCellValue('I1', 'Giá')
+            ->setCellValue('J1', 'Location');
+        
+        $sql = "SELECT $this->table.*, authors.author_name as author_name, publishers.publisher_name as publisher_name
+                FROM $this->table, authors, publishers
+                WHERE $this->table.author_id = authors.id and $this->table.publisher_id = publishers.id";
+
+        $books = $this->db->getAll($sql);
+
+        $newBooks = array_map(function ($book) {
+            $categories = $this->db->getAll("SELECT category_name FROM book_categories, category
+                                            WHERE book_categories.category_id = category.id 
+                                            and book_id = :book_id", ['book_id' => $book['id']]);
+
+            $book['categories'] = implode(', ', array_column($categories, 'category_name'));
+
+            $quantityBorrow = $this->db->getOne("SELECT SUM(quantity) as total
+                                                FROM $this->tableBorrowBooks bb
+                                                WHERE book_id = :book_id AND bb.return_date IS NULL AND
+                                                bb.book_status IS NULL", ['book_id' => $book['id']]);
+
+            $book['quantity_borrow'] = $quantityBorrow['total'] ?? 0;
+
+            return $book;
+        }, $books);
+
+        $row = 2;
+        
+        foreach ($newBooks as $book) {
+            $sheet->setCellValue('A' . $row, $book['isbn_code'])
+                ->setCellValue('B' . $row, $book['book_name'])
+                ->setCellValue('C' . $row, $book['author_name'])
+                ->setCellValue('D' . $row, $book['publisher_name'])
+                ->setCellValue('E' . $row, $book['year_published'])
+                ->setCellValue('F' . $row, $book['categories'])
+                ->setCellValue('G' . $row, $book['quantity_borrow'])
+                ->setCellValue('H' . $row, $book['quantity'])
+                ->setCellValue('I' . $row, $book['price'] . ' VND')
+                ->setCellValue('J' . $row, $book['location']);
+
+            $row++;
+        }
+        
+        $file_name = 'Thong_ke_sach_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $file_name . '"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+
+        exit();
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/22
+     * @param $bookId
+     * @return void
+     */
+    public function exportExcelBook($bookId): void
+    {
+        $spreadsheet = new Spreadsheet();
+
+        $sheet1 = $spreadsheet->getActiveSheet();
+
+        $sheet1->setTitle('Thống kê sách');
+
+        $sheet1->setCellValue('A1', 'Mã ISBN')
+            ->setCellValue('B1', 'Tên sách')
+            ->setCellValue('C1', 'Tác giả')
+            ->setCellValue('D1', 'Nhà xuất bản')
+            ->setCellValue('E1', 'Năm xuất bản')
+            ->setCellValue('F1', 'Thể loại')
+            ->setCellValue('G1', 'Số lượng mượn')
+            ->setCellValue('H1', 'Số lượng tồn')
+            ->setCellValue('I1', 'Giá')
+            ->setCellValue('J1', 'Location');
+
+        $book = $this->getBookById($bookId);
+
+        $quantityBorrow = $this->db->getOne("SELECT SUM(quantity) as total
+                                                FROM $this->tableBorrowBooks bb
+                                                WHERE book_id = :book_id AND bb.return_date IS NULL AND
+                                                bb.book_status IS NULL", ['book_id' => $book['id']]);
+
+        $book['quantity_borrow'] = $quantityBorrow['total'] ?? 0;
+
+        $sheet1->setCellValue('A2', $book['isbn_code'])
+            ->setCellValue('B2', $book['book_name'])
+            ->setCellValue('C2', $book['author_name'])
+            ->setCellValue('D2', $book['publisher_name'])
+            ->setCellValue('E2', $book['year_published'])
+            ->setCellValue('F2', $book['categories'])
+            ->setCellValue('G2', $book['quantity_borrow'])
+            ->setCellValue('H2', $book['quantity'])
+            ->setCellValue('I2', $book['price'] . ' VND')
+            ->setCellValue('J2', $book['location']);
+        
+        $sheet2 = $spreadsheet->createSheet();
+
+        $sheet2->setTitle('Thông tin độc giả mượn sách');
+
+        $sheet2->setCellValue('A1', 'Mã độc giả')
+            ->setCellValue('B1', 'Tên độc giả')
+            ->setCellValue('C1', 'Số lượng mượn')
+            ->setCellValue('D1', 'Ngày mượn')
+            ->setCellValue('E1', 'Ngày trả')
+            ->setCellValue('F1', 'Trạng thái')
+            ->setCellValue('G1', 'Số ngày quá hạn')
+            ->setCellValue('H1', 'Tiền phạt');
+
+        $borrowBooks = $this->db->getAll("SELECT users.user_name, users.id as user_id, bb.quantity, 
+                                        bb.borrow_date, bb.return_date, bb.book_status, f.fine_amount, f.days_overdue 
+                                        FROM $this->tableBorrowBooks bb, users, fines f
+                                        WHERE bb.user_id = users.id AND bb.book_id = :book_id
+                                        AND bb.id = f.borrow_id AND bb.return_date IS NOT NULL 
+                                        AND bb.book_status IS NOT NULL", 
+                                        ['book_id' => $bookId]);
+
+
+        if (empty($borrowBooks)) {
+            $sheet2->setCellValue('A2', 'Không có dữ liệu');
+        } else {
+            $row = 2;
+    
+            foreach ($borrowBooks as $borrowBook) {
+                $sheet2->setCellValue('A' . $row, $borrowBook['user_id'])
+                    ->setCellValue('B' . $row, $borrowBook['user_name'])
+                    ->setCellValue('C' . $row, $borrowBook['quantity'])
+                    ->setCellValue('D' . $row, $borrowBook['borrow_date'])
+                    ->setCellValue('E' . $row, $borrowBook['return_date'])
+                    ->setCellValue('F' . $row, $borrowBook['book_status'])
+                    ->setCellValue('G' . $row, $borrowBook['days_overdue'] . ' ngày')
+                    ->setCellValue('H' . $row, $borrowBook['fine_amount'] . ' VND');
+    
+                $row++;
+            }
+        }
+
+
+        $file_name = 'Thong_ke_sach_' . $book['book_name'] . '_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $file_name . '"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+
+        exit();
     }
 }

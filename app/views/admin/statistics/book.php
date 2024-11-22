@@ -18,7 +18,7 @@
                     </h3>
 
                     <button
-                        class="btn btn--info">
+                        class="btn btn--info btn-export-all-books">
                         <i class="fa-solid fa-file-export"></i>
                     </button>
                 </div>
@@ -90,7 +90,9 @@
                                 </td>
                                 <td>
                                     <button
-                                        class="btn btn--info">
+                                        class="btn btn--info btn-export-book"
+                                        data-id="<?= $book['id'] ?>"
+                                    >
                                         <i class="fa-solid fa-file-export"></i>
                                     </button>
                                 </td>
@@ -151,13 +153,13 @@
                         </div>
                         <div class="form__filter-group">
                             <button
-                                type="submit"
-                                class="btn">
+                                type="button"
+                                class="btn btn-search">
                                 Tra cứu
                             </button>
                         </div>
                         <div class="form__filter-group">
-                            <a href="#" class="btn">Hủy</a>
+                            <button type="button" class="btn btn-reset">Hủy</button>
                         </div>
                     </form>
                     <div>
@@ -170,50 +172,91 @@
 </div>
 
 <script>
-    const ctx = document.getElementById('myChart');
+    let myChart;
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [
-                'Tháng 1',
-                'Tháng 2',
-                'Tháng 3',
-                'Tháng 4',
-                'Tháng 5',
-                'Tháng 6',
-                'Tháng 7',
-                'Tháng 8',
-                'Tháng 9',
-                'Tháng 10',
-                'Tháng 11',
-                'Tháng 12',
-            ],
-            datasets: [{
-                label: 'Số lượng mượn sách',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Năm 2020',
-                        color: '#000',
-                        font: {
-                            size: 16,
-                            weight: 'bold'
+    const generateChart = (mounth, amount, year) => {
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        const ctx = document.getElementById('myChart');
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: mounth,
+                datasets: [{
+                    label: 'Số lượng mượn sách',
+                    data: amount,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: `Năm ${year}`,
+                            color: '#000',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
                         }
+                    },
+                    y: {
+                        beginAtZero: true
                     }
-                },
-                y: {
-                    beginAtZero: true
                 }
             }
+        });
+    };
+
+    const start = async () => {
+        let currentYear = new Date().getFullYear();
+
+        document.getElementById('year').value = currentYear;
+
+        const response = await fetch(`<?= WEB_ROOT ?>/quan-tri/thong-ke-sach/so-luong-muon-sach/${currentYear}`);
+        const data = await response.json();
+
+        let  mounth = data.map(item => `Tháng ${item.month}`);
+        let amount = data.map(item => item.borrow_count);
+
+        generateChart(mounth, amount, currentYear);
+    };
+
+    document.querySelector('.btn-search').addEventListener('click', async () => {
+        let year = document.getElementById('year').value;
+
+        if (year === '') {
+            alert('Vui lòng nhập năm');
+            return;
         }
+
+        const response = await fetch(`<?= WEB_ROOT ?>/quan-tri/thong-ke-sach/so-luong-muon-sach/${year}`);
+        const data = await response.json();
+
+        let  mounth = data.map(item => `Tháng ${item.month}`);
+        let amount = data.map(item => item.borrow_count);
+
+        generateChart(mounth, amount, year);
     });
+
+    document.querySelector('.btn-reset').addEventListener('click', async () => {
+        let currentYear = new Date().getFullYear();
+
+        document.getElementById('year').value = currentYear;
+
+        const response = await fetch(`<?= WEB_ROOT ?>/quan-tri/thong-ke-sach/so-luong-muon-sach/${currentYear}`);
+        const data = await response.json();
+
+        let  mounth = data.map(item => `Tháng ${item.month}`);
+        let amount = data.map(item => item.borrow_count);
+
+        generateChart(mounth, amount, currentYear);
+    });
+
+    start();
 </script>
 
 <script>
@@ -225,5 +268,18 @@
         tooltipTriggerEl
     ) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
+
+<script>
+    document.querySelector('.btn-export-all-books').addEventListener('click', () => {
+        window.location.href = '<?= WEB_ROOT ?>/admin/statistic/exportFileExcelAllBooks';
+    });
+
+    document.querySelectorAll('.btn-export-book').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const bookId = this.getAttribute('data-id');
+            window.location.href = `<?= WEB_ROOT ?>/admin/statistic/exportFileExcelBook/${bookId}`;
+        });
     });
 </script>
