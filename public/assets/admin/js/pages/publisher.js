@@ -16,10 +16,6 @@ $(document).ready(() => {
         const data = {
             name: $("#publisher-name").val(),
         };
-        console.log(getWebRoot());
-        console.log(WEB_ROOT);
-        
-        console.log(data['name']);
         if (!validateData(data)) return;
         
         $.ajax({
