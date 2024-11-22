@@ -42,7 +42,11 @@ $routes['quan-tri/quan-ly-the-loai'] = 'admin/category';
 $routes['quan-tri/quan-ly-nha-xuat-ban/trang-(\d+).html'] = 'admin/publisher/index/$1';
 $routes['quan-tri/quan-ly-nha-xuat-ban'] = 'admin/publisher';
 
-
+// Author
+$routes['quan-tri/quan-ly-tac-gia/trang-(\d+).html'] = 'admin/author/index/$1';
+$routes['quan-tri/quan-ly-tac-gia/tim-kiem/trang-(\d+).html'] = 'admin/author/search/$1';
+$routes['quan-tri/quan-ly-tac-gia/tim-kiem'] = 'admin/author/search';
+$routes['quan-tri/quan-ly-tac-gia'] = 'admin/author';
 $routes['quan-tri/dashboard'] = 'admin/home';
 $routes['quan-tri'] = 'admin/home';
 // ...
