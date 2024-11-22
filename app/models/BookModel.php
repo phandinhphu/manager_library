@@ -559,6 +559,60 @@ class BookModel extends Model
             'total' => $totalBooks
         ];
     }
+    /***
+     * author La Đại Lộc
+     * @param 2024/11/22
+     * @return array
+     */
+
+    public function getNewBooks(): array
+    {
+        $sql = "SELECT books.* 
+                FROM books 
+                ORDER BY id DESC
+                LIMIT 0, 10";
+
+        $books = $this->db->getAll($sql);
+        return $books;
+    }
+
+    /***
+     * author La Đại Lộc
+     * @param 2024/11/22
+     * @return array
+     */
+    public function getMostLikedBooks(): array
+    {
+        $sql = "SELECT books.*, COUNT(user_book_actions.book_id) as total_like
+                FROM books
+                JOIN user_book_actions ON books.id = user_book_actions.book_id
+                WHERE user_book_actions.action_type = 'like'
+                GROUP BY books.id
+                ORDER BY total_like DESC
+                LIMIT 0, 10";
+
+        $books = $this->db->getAll($sql);
+        return $books;
+    }
+
+    /***
+     * author La Đại Lộc
+     * @param 2024/11/22
+     * @return array
+     */
+    public function getMostDislikedBooks(): array
+    {
+        $sql = "SELECT books.*, COUNT(user_book_actions.book_id) as total_dislike
+                FROM books
+                JOIN user_book_actions ON books.id = user_book_actions.book_id
+                WHERE user_book_actions.action_type = 'dislike'
+                GROUP BY books.id
+                ORDER BY total_dislike DESC
+                LIMIT 0, 10";
+
+        $books = $this->db->getAll($sql);
+        return $books;
+    }
 
     /***
      * @author Phan Đình Phú

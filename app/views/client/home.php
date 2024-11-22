@@ -8,102 +8,30 @@
                 <div class="component__content">
                     <div class="list__items">
                         <div class="row">
+                            <?php 
+                                if (isset($newbooks)) {
+                                    foreach($newbooks as $book) {
+                            ?>
                             <a
-                                href="detail.html"
+                                href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>"
                                 class="grCol grL-2-4 grM-4 grC-6">
                                 <div class="list__item">
                                     <img
                                         class="book__img"
-                                        src="./assets/img/OIP.jfif"
+                                        src="<?php echo $book['img']; ?>"
                                         alt="" />
                                     <div class="book__title">
                                         <h3
                                             class="book__title-text">
-                                            Sách lão hạc
+                                            <?php echo $book['book_name']; ?>
                                         </h3>
                                     </div>
                                 </div>
                             </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
+                            <?php 
+                                    }
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -115,102 +43,30 @@
                 <div class="component__content">
                     <div class="list__items">
                         <div class="row">
+                            <?php 
+                                if (isset($mostlikedbooks)) {
+                                    foreach($mostlikedbooks as $book) {
+                            ?>
                             <a
-                                href="detail.html"
+                                href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>"
                                 class="grCol grL-2-4 grM-4 grC-6">
                                 <div class="list__item">
                                     <img
                                         class="book__img"
-                                        src="./assets/img/no-image.png"
+                                        src="<?php echo $book['img']; ?>"
                                         alt="" />
                                     <div class="book__title">
                                         <h3
                                             class="book__title-text">
-                                            Sách 1
+                                            <?php echo $book['book_name']; ?>
                                         </h3>
                                     </div>
                                 </div>
                             </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
-                            <a
-                                href="detail.html"
-                                class="grCol grL-2-4 grM-4 grC-6">
-                                <div class="list__item">
-                                    <img
-                                        class="book__img"
-                                        src="./assets/img/no-image.png"
-                                        alt="" />
-                                    <div class="book__title">
-                                        <h3
-                                            class="book__title-text">
-                                            Sách 1
-                                        </h3>
-                                    </div>
-                                </div>
-                            </a>
+                            <?php 
+                                    }
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -223,21 +79,21 @@
                     <div class="list__items">
                         <div class="row">
                             <?php 
-                                if (isset($books)) {
-                                    foreach($books as $book) {
+                                if (isset($mostdislikedbooks)) {
+                                    foreach($mostdislikedbooks as $book) {
                             ?>
                             <a
-                                href="detail.html"
+                                href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>"
                                 class="grCol grL-2-4 grM-4 grC-6">
                                 <div class="list__item">
                                     <img
                                         class="book__img"
-                                        src="./assets/img/no-image.png"
+                                        src="<?php echo $book['img']; ?>"
                                         alt="" />
                                     <div class="book__title">
                                         <h3
                                             class="book__title-text">
-                                            Sách 1
+                                            <?php echo $book['book_name']; ?>
                                         </h3>
                                     </div>
                                 </div>
