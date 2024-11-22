@@ -12,7 +12,7 @@ class Publisher extends Controller{
             header('Location: ' . WEB_ROOT . '/quan-tri/dang-nhap');
             exit();
         }
-        $publisher = $this->publisherModel->getByPage();
+        $publisher = $this->publisherModel->getByPage($page);
 
         $this->data['headercontent']['tab'] = 'books';
         $this->data['subcontent']['publisher'] = $publisher['data'];
