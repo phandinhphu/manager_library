@@ -13,7 +13,7 @@
                                     foreach($newbooks as $book) {
                             ?>
                             <a
-                                href="book-detail.php"
+                                href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>"
                                 class="grCol grL-2-4 grM-4 grC-6">
                                 <div class="list__item">
                                     <img
@@ -48,7 +48,7 @@
                                     foreach($mostlikedbooks as $book) {
                             ?>
                             <a
-                                href="book-detail.php"
+                                href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>"
                                 class="grCol grL-2-4 grM-4 grC-6">
                                 <div class="list__item">
                                     <img
@@ -83,7 +83,7 @@
                                     foreach($mostdislikedbooks as $book) {
                             ?>
                             <a
-                                href="book-detail.php"
+                                href="<?= WEB_ROOT . '/sach/chi-tiet/' . $book['id'] ?>"
                                 class="grCol grL-2-4 grM-4 grC-6">
                                 <div class="list__item">
                                     <img
