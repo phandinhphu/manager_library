@@ -36,6 +36,11 @@ $routes['quan-tri/quan-ly-the-loai/tim-kiem'] = 'admin/category/search';
 $routes['quan-tri/quan-ly-the-loai'] = 'admin/category';
 
 
+// Publisher
+$routes['quan-tri/quan-ly-nha-xuat-ban/trang-(\d+).html'] = 'admin/publisher/index/$1';
+$routes['quan-tri/quan-ly-nha-xuat-ban'] = 'admin/publisher';
+
+
 $routes['quan-tri/dashboard'] = 'admin/home';
 $routes['quan-tri'] = 'admin/home';
 // ...

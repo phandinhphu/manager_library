@@ -31,6 +31,7 @@ class Category extends Controller
         $this->data['subcontent']['total_pages'] = $this->categoryModel->getTotalPage($categories['total']);
         $this->data['subcontent']['page'] = $page;
         $this->data['subcontent']['url_page'] = WEB_ROOT . '/quan-tri/quan-ly-the-loai/trang-';
+        $this->data['subcontent']['script'] = 'category';
 
         $this->data['title'] = 'Quản lý thể loại';
         $this->data['content'] = 'admin/category';
