@@ -3,13 +3,21 @@
 class Statistic extends Controller
 {
     private mixed $bookModel;
+    private mixed $borrowBookModel;
     private array $data = [];
 
     public function __construct()
     {
         $this->bookModel = $this->model('BookModel');
+        $this->borrowBookModel = $this->model('BorrowBookModel');
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/21
+     * @param int $page
+     * @return void
+     */
     public function book($page = 1): void
     {
         $condition = [];
@@ -34,5 +42,32 @@ class Statistic extends Controller
 
         $this->view('layouts/admin_layout', $this->data);
 
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/21
+     * @param int $year
+     * @return void
+     */
+    public function amountBorrowBook($year = ''): void
+    {
+        if ($year == '') {
+            $year = date('Y');
+        }
+
+        $data = $this->borrowBookModel->getAmountBorrowedOverYear($year);
+
+        echo json_encode($data);
+    }
+
+    public function exportFileExcelAllBooks(): void
+    {
+        $this->bookModel->exportExcelAllBooks();
+    }
+
+    public function exportFileExcelBook($bookId): void
+    {
+        $this->bookModel->exportExcelBook($bookId);
     }
 }

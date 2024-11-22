@@ -301,6 +301,14 @@ class BorrowBookModel extends Model
         ];
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/17
+     * @param array $where
+     * @param string $selected
+     * @param int $page
+     * @return array
+     */
     public function getByCondition($where = [], $selected = '*', $page = 1): array
     {
         $offset = ($page - 1) * $this->limit;
@@ -343,6 +351,12 @@ class BorrowBookModel extends Model
         ];
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/17
+     * @param int $id
+     * @return array
+     */
     public function getInfoReturnBook($id): array
     {
         $dataBase = $this->getByCondition(
@@ -369,6 +383,13 @@ class BorrowBookModel extends Model
         ];
     }
 
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/17
+     * @param string $dueDate
+     * @param string $returnDate
+     * @return int
+     */
     public function getOverDueBooks($dueDate, $returnDate): int {
         $dueDate = strtotime($dueDate);
         $returnDate = strtotime($returnDate);
@@ -377,5 +398,40 @@ class BorrowBookModel extends Model
         $diff = floor($diff / (60 * 60 * 24));
 
         return $diff > 0 ? $diff : 0;
+    }
+
+    /***
+     * @author Phan Đình Phú
+     * @since 2024/11/21
+     * @param int $year
+     * @return array
+     */
+    public function getAmountBorrowedOverYear($year): array
+    {
+        $sql = "SELECT 
+                    m.month,
+                    IFNULL(b.borrow_count, 0) AS borrow_count
+                FROM 
+                    (SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION 
+                    SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION 
+                    SELECT 11 UNION SELECT 12) m
+                LEFT JOIN 
+                    (
+                        SELECT 
+                            MONTH(borrow_date) AS month, 
+                            COUNT(*) AS borrow_count
+                        FROM 
+                            borrowbooks
+                        WHERE 
+                            YEAR(borrow_date) = :year
+                        GROUP BY 
+                            MONTH(borrow_date)
+                    ) b
+                ON 
+                    m.month = b.month
+                ORDER BY 
+                    m.month";
+
+        return $this->db->getAll($sql, ['year' => $year]);
     }
 }
