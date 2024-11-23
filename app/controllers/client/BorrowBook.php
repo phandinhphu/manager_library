@@ -3,11 +3,13 @@ class BorrowBook extends Controller {
 
     private mixed $user_id;
     private mixed $borrowBookModel;
+    private mixed $bookModel;
     private array $data = [];
 
     public function __construct()
     {
         $this->borrowBookModel = $this->model('BorrowBookModel');
+        $this->bookModel = $this->model('BookModel');
     }
 
     public function index($page = 1): void
@@ -84,5 +86,18 @@ class BorrowBook extends Controller {
             header('Location: ' . WEB_ROOT . '/muon-sach');
             exit();
         }
+    }
+
+    /**
+     * Lấy danh sách sách mượn quá hạn
+     * @author Phan Đình Phú
+     * @since 2024/11/22
+     * @param int $user_id
+     * @return void
+     */
+    public function getOverdueBooks(int $user_id): void
+    {
+        $overdue_books = $this->bookModel->getBooksOverdue($user_id);
+        echo json_encode($overdue_books);
     }
 }

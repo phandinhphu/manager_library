@@ -15,7 +15,7 @@ class BookModel extends Model
         parent::__construct();
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @return array
@@ -46,7 +46,7 @@ class BookModel extends Model
         ];
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @param int $page
@@ -81,7 +81,7 @@ class BookModel extends Model
         ];
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @param $id
@@ -105,7 +105,7 @@ class BookModel extends Model
         return $book;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @param $where array
      * @param $page int
@@ -171,7 +171,7 @@ class BookModel extends Model
         ];
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @param $data
@@ -186,7 +186,7 @@ class BookModel extends Model
         return $bookId;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @param $condition
@@ -209,7 +209,7 @@ class BookModel extends Model
         return implode('&', $paramString);
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/19
      * @param $book_id
@@ -225,7 +225,7 @@ class BookModel extends Model
         return 0;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/19
      * @param $book_id
@@ -242,7 +242,7 @@ class BookModel extends Model
         return 0;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/20
      * @param $book_id
@@ -274,7 +274,7 @@ class BookModel extends Model
         }
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/20
      * @param $book_id
@@ -306,7 +306,7 @@ class BookModel extends Model
         }
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/20
      * @param $book_id
@@ -327,7 +327,7 @@ class BookModel extends Model
         return '';
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/27
      * @param $bookId
@@ -359,7 +359,7 @@ class BookModel extends Model
         return $newBooks;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/27
      * @param $bookId
@@ -389,7 +389,7 @@ class BookModel extends Model
         return $newBooks;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/31
      * @param $bookId
@@ -411,7 +411,7 @@ class BookModel extends Model
         return false;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/31
      * @param $bookId
@@ -430,7 +430,7 @@ class BookModel extends Model
         return false;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/11/3
      * @param $page
@@ -456,7 +456,7 @@ class BookModel extends Model
         ];
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/11/3
      * @param $condition
@@ -501,7 +501,7 @@ class BookModel extends Model
         return $books;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/11/12
      * @return array
@@ -528,7 +528,7 @@ class BookModel extends Model
         return $newBooks;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/11/21
      * @return array
@@ -559,7 +559,7 @@ class BookModel extends Model
             'total' => $totalBooks
         ];
     }
-    /***
+    /**
      * author La Đại Lộc
      * @param 2024/11/22
      * @return array
@@ -576,7 +576,7 @@ class BookModel extends Model
         return $books;
     }
 
-    /***
+    /**
      * author La Đại Lộc
      * @param 2024/11/22
      * @return array
@@ -595,7 +595,7 @@ class BookModel extends Model
         return $books;
     }
 
-    /***
+    /**
      * author La Đại Lộc
      * @param 2024/11/22
      * @return array
@@ -614,7 +614,7 @@ class BookModel extends Model
         return $books;
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/11/21
      * @return void
@@ -689,7 +689,7 @@ class BookModel extends Model
         exit();
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/11/22
      * @param $bookId
@@ -785,5 +785,29 @@ class BookModel extends Model
         $writer->save('php://output');
 
         exit();
+    }
+
+    /**
+     * @author Phan Đình Phú
+     * @since 2024/11/22
+     * @param $bookId
+     * @return void
+     */
+    public function getBooksOverdue($userId): array
+    {
+        $sql = "SELECT b.book_name
+                FROM $this->tableBorrowBooks bb, $this->table b
+                WHERE bb.book_id = b.id
+                AND bb.user_id = :user_id AND bb.return_date IS NULL
+                AND bb.book_status IS NULL
+                AND bb.due_date < CURDATE()";
+
+        $books = $this->db->getAll($sql, ['user_id' => $userId]);
+
+        if ($books) {
+            return $books;
+        }
+
+        return [];
     }
 }

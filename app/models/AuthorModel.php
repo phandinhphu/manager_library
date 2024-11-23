@@ -10,7 +10,7 @@ class AuthorModel extends Model
     }
 
     
-    public function getAllAuthor(): array
+    public function getAllAuthors(): array
     {
         return $this->getAll('*', 'all');
     }
@@ -25,7 +25,7 @@ class AuthorModel extends Model
 
         $author = $this->db->getAll($sql);
 
-        $total = count($this->getAllAuthor());
+        $total = count($this->getAllAuthors());
 
         return [
             'data' => $author,
