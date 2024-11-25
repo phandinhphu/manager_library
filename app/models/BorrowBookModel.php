@@ -434,4 +434,163 @@ class BorrowBookModel extends Model
 
         return $this->db->getAll($sql, ['year' => $year]);
     }
+
+    /**
+     * @author Phan Đình Phú
+     * @since 2024/11/25
+     * @param int $userId
+     * @param array $where
+     * @param string $filter
+     * @param int $page
+     * @return array
+     */
+    public function getBooksReturned($userId, $where = [], $filter = '', $page = 1): array
+    {
+        $offset = ($page - 1) * $this->limit;
+        $orderBy = 'bb.return_date DESC';
+
+        // Xây dựng mảng $param và điều kiện
+        $condition = !empty($where) ? implode(' AND ', array_map(function ($v) use (&$where) {
+            if ($v == 'book_name') {
+                $where[$v] = '%' . $where[$v] . '%';
+                return "b.$v LIKE :$v";
+            }
+
+            return "$v = :$v";
+        }, array_keys($where))) : '';
+
+        // Xây dựng điều kiện filter
+        switch ($filter) {
+            case 'book_name_asc':
+                $orderBy = 'b.book_name ASC';
+                break;
+            case 'book_name_desc':
+                $orderBy = 'b.book_name DESC';
+                break;
+            case 'borrow_date_desc':
+                $orderBy = 'bb.borrow_date DESC';
+                break;
+            case 'borrow_date_asc':
+                $orderBy = 'bb.borrow_date ASC';
+                break;
+            case 'return_date_asc':
+                $orderBy = 'bb.return_date ASC';
+                break;
+            case 'fine_amount_desc':
+                $orderBy = 'f.fine_amount DESC';
+                break;
+            case 'fine_amount_asc':
+                $orderBy = 'f.fine_amount ASC';
+                break;
+            default:
+                $orderBy = 'bb.return_date DESC';
+        }
+
+        $sql = $condition != '' ?
+            "SELECT 
+                b.isbn_code as isbn_code,
+                b.book_name as book_name,
+                a.author_name as author_name,
+                bb.borrow_date as borrow_date,
+                bb.return_date as return_date,
+                bb.book_status as book_status,
+                f.fine_amount as fine_amount
+            FROM $this->table bb
+            JOIN fines f ON bb.id = f.borrow_id
+            JOIN books b ON bb.book_id = b.id
+            JOIN authors a ON b.author_id = a.id
+            WHERE bb.user_id = :userId AND bb.return_date IS NOT NULL
+            AND $condition
+            ORDER BY $orderBy"
+            :
+            "SELECT 
+                b.isbn_code as isbn_code,
+                b.book_name as book_name,
+                a.author_name as author_name,
+                bb.borrow_date as borrow_date,
+                bb.return_date as return_date,
+                bb.book_status as book_status,
+                f.fine_amount as fine_amount
+            FROM $this->table bb
+            JOIN fines f ON bb.id = f.borrow_id
+            JOIN books b ON bb.book_id = b.id
+            JOIN authors a ON b.author_id = a.id
+            WHERE bb.user_id = :userId AND bb.return_date IS NOT NULL
+            ORDER BY $orderBy";
+
+        $total = count($this->db->getAll($sql, array_merge($where, ['userId' => $userId])));
+
+        $rs = $this->db->getAll($sql . " LIMIT $offset, $this->limit", array_merge($where, ['userId' => $userId]));
+
+        return [
+            'data' => $rs,
+            'total' => $total
+        ];
+    }
+
+    /**
+     * @author Phan Đình Phú
+     * @since 2024/11/25
+     * @param $userId
+     * @param string $type 'all' || 'overdue'
+     * @return int
+     */
+    public function sumBooksReturned($userId, $type = 'all'): int
+    {
+        $sql = "SELECT COUNT(*) as total FROM $this->table WHERE user_id = :userId AND return_date IS NOT NULL";
+        if ($type == 'overdue') {
+            $sql .= " AND due_date < return_date";
+        }
+
+        return $this->db->getOne($sql, ['userId' => $userId])['total'];
+    }
+
+    /**
+     * @author Phan Đình Phú
+     * @since 2024/11/25
+     * @param $userId
+     * @param string $type 'all' || 'overdue'
+     * @return array
+     */
+    public function sumBooksBorrow($userId, $type = 'all'): int
+    {
+        $sql = "SELECT COUNT(*) as total FROM $this->table WHERE user_id = :userId AND return_date IS NULL";
+        if ($type == 'overdue') {
+            $sql .= " AND due_date < CURDATE()";
+        }
+
+        return $this->db->getOne($sql, ['userId' => $userId])['total'];
+    }
+
+    /**
+     * @author Phan Đình Phú
+     * @since 2024/11/25
+     * @param $userId
+     * @return int
+     */
+    public function sumFineAmount($userId): int
+    {
+        $sql = "SELECT SUM(fine_amount) as total FROM fines f
+                JOIN borrowbooks bb ON f.borrow_id = bb.id
+                WHERE bb.user_id = :userId";
+
+        $rs = $this->db->getOne($sql, ['userId' => $userId])['total'];
+
+        return $rs ?? 0;
+    }
+
+    /**
+     * Lấy tổng số sách đang mượn và đã trả
+     * @author Phan Đình Phú
+     * @since 2024/11/25
+     * @param int $userId
+     * @return int
+     */
+    public function getTotal($userId): int
+    {
+        $sql = "SELECT COUNT(*) as total FROM $this->table 
+                WHERE user_id = :userId";
+
+        return $this->db->getOne($sql, ['userId' => $userId])['total'];
+    }
 }

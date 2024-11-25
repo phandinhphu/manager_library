@@ -68,6 +68,9 @@ $routes['danh-sach-mong-muon'] = 'client/books/wishlist';
 $routes['add-request'] = 'request/addRequest';
 $routes['thong-tin-ca-nhan'] = 'client/auth/profile';
 $routes['doi-mat-khau'] = 'client/auth/changePassword';
+$routes['lich-su/tim-kiem/trang-(\d+).html'] = 'client/history/search/$1';
+$routes['lich-su/trang-(\d+).html'] = 'client/history/index/$1';
+$routes['lich-su'] = 'client/history';
 
 // Borrow Book
 $routes['muon-sach/trang-(\d+).html'] = 'client/borrowbook/index/$1';
