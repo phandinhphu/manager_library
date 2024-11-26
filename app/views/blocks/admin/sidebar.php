@@ -63,7 +63,7 @@
                 <div
                     class="sidebar__item-link"
                 >
-                    Thống kê
+                    Statistics
                     <i
                         class="fa-solid fa-caret-right icon no-rotate"
                     ></i>
