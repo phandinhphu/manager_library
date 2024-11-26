@@ -3,6 +3,7 @@
 class BorrowBook extends Controller
 {
     private mixed $borrowBookModel;
+    private mixed $bookModel;
     private mixed $fineModel;
     private mixed $userModel;
     private array $data = [];
@@ -10,6 +11,7 @@ class BorrowBook extends Controller
     public function __construct()
     {
         $this->borrowBookModel = $this->model('BorrowBookModel');
+        $this->bookModel = $this->model('BookModel');
         $this->fineModel = $this->model('FineModel');
         $this->userModel = $this->model('UserModel');
     }
@@ -96,9 +98,16 @@ class BorrowBook extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = json_decode(file_get_contents('php://input'), true);
 
+            $book = $this->bookModel->getBookById($data['book_id']);
+
             $rsUpdate = $this->borrowBookModel->Update(
                 ['return_date' => $data['return_date'], 'book_status' => $data['book_status']],
                 ['id' => $data['id']]
+            );
+
+            $rsUpdateQuantity = $this->bookModel->Update(
+                ['quantity' => $book['quantity'] + $data['quantity']],
+                ['id' => $data['book_id']]
             );
 
             $rsAdd = $this->fineModel->Add([
@@ -107,7 +116,7 @@ class BorrowBook extends Controller
                 'days_overdue' => $data['days_overdue'],
             ]);
 
-            if ($rsUpdate && $rsAdd) {
+            if ($rsUpdate && $rsAdd && $rsUpdateQuantity) {
                 echo json_encode(['status' => 'success', 'message' => 'Xác nhận trả sách thành công']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Xác nhận trả sách thất bại']);

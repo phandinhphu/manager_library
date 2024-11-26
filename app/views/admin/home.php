@@ -137,7 +137,7 @@
                                 foreach ($readers_violated as $key => $reader) :
                             ?>
                             <tr>
-                                <td>1</td>
+                                <td><?= $key + 1 ?></td>
                                 <td>
                                     <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $reader['user_name'] ?>">
                                         <?= $reader['user_name'] ?>

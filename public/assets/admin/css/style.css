@@ -91,6 +91,14 @@ a:hover {
     cursor: pointer;
 }
 
+.header__logo-img {
+    width: 100px;
+    height: 75px;
+    border-radius: 23px;
+    border: 1px solid #fff;
+    margin-left: 20px;
+}
+
 .header__menu {
     display: flex;
     align-items: center;

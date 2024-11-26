@@ -1,7 +1,12 @@
 <header class="header">
     <div class="header__content">
         <div class="header__logo">
-            <a href="./index.html">Logo</a>
+            <a href="<?= WEB_ROOT . '/quan-tri' ?>">
+                <img
+                    class="header__logo-img"
+                    src="<?= WEB_ROOT . '/public/imgs/shortcut.jpg' ?>"
+                    alt="logo" />
+            </a>
         </div>
         <div class="header__menu">
             <ul class="menu__items">

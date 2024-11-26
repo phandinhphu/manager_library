@@ -88,7 +88,10 @@
                                     alt="Ảnh đại diện"
                                 />
                                 <div class="comment__user-info">
-                                    <h5 class="comment__user-name"><?= $comment['user_name'] === $_SESSION['user']['name'] ? 'Bạn' : $comment['user_name'] ?></h5>
+                                    <h5 class="comment__user-name">
+                                        <?= isset($_SESSION['user']) && ($comment['user_name'] === $_SESSION['user']['name'])
+                                        ? 'Bạn' : $comment['user_name'] ?>
+                                    </h5>
                                     <p class="comment__user-date"><?= $comment['created_at'] ?></p>
                                 </div>
                             </div>

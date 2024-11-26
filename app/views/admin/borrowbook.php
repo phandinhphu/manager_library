@@ -400,6 +400,14 @@
 
     const handleConfirm = async (data, modalView) => {
         let book_status = modalView.querySelector('#note').value;
+        if (data.days_overdue > 0) {
+            if (book_status === '') {
+                book_status = 'Quá hạn';
+            } else {
+                book_status += ' - Quá hạn';
+            }
+        }
+
         data = { ...data, book_status };
 
         const req = await fetch('<?= WEB_ROOT . '/admin/borrowbook/confirmReturnBook' ?>', {
@@ -451,6 +459,8 @@
 
             let data = {
                 id: id,
+                book_id: res.book_id,
+                quantity: res.quantity,
                 fine_amount: Number(staff_fine) + Number(res.system_fine),
                 days_overdue: res.over_dues,
                 return_date: res.return_date,

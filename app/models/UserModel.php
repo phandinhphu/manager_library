@@ -162,7 +162,7 @@ class UserModel extends Model
             (SELECT COUNT(*) FROM users) as total,
             COUNT(DISTINCT CASE WHEN bb.return_date IS NULL THEN u.id END) as borrowing,
             COUNT(DISTINCT CASE WHEN bb.return_date IS NOT NULL THEN u.id END) as returned,
-            COUNT(DISTINCT CASE WHEN bb.return_date < CURRENT_DATE AND bb.return_date IS NULL THEN u.id END) as overdue
+            COUNT(DISTINCT CASE WHEN bb.due_date < CURRENT_DATE AND bb.return_date IS NULL THEN u.id END) as overdue
         FROM users u
         LEFT JOIN borrowbooks bb ON u.id = bb.user_id");
         return $stats;

@@ -677,6 +677,16 @@ class BookModel extends Model
 
             $row++;
         }
+
+        // Style
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
+
+        // Auto size columns for each worksheet
+        foreach ($spreadsheet->getWorksheetIterator() as $worksheet) {
+            foreach ($worksheet->getColumnIterator() as $column) {
+                $worksheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+            }
+        }
         
         $file_name = 'Thong_ke_sach_' . date('Y-m-d_H-i-s') . '.xlsx';
 
@@ -701,18 +711,18 @@ class BookModel extends Model
 
         $sheet1 = $spreadsheet->getActiveSheet();
 
-        $sheet1->setTitle('Thống kê sách');
+        $sheet1->setTitle('Thông tin sách');
 
-        $sheet1->setCellValue('A1', 'Mã ISBN')
-            ->setCellValue('B1', 'Tên sách')
-            ->setCellValue('C1', 'Tác giả')
-            ->setCellValue('D1', 'Nhà xuất bản')
-            ->setCellValue('E1', 'Năm xuất bản')
-            ->setCellValue('F1', 'Thể loại')
-            ->setCellValue('G1', 'Số lượng mượn')
-            ->setCellValue('H1', 'Số lượng tồn')
-            ->setCellValue('I1', 'Giá')
-            ->setCellValue('J1', 'Location');
+        $sheet1->setCellValue('A1', 'Mã ISBN: ')
+            ->setCellValue('A2', 'Tên sách: ')
+            ->setCellValue('A3', 'Tác giả: ')
+            ->setCellValue('A4', 'Nhà xuất bản: ')
+            ->setCellValue('A5', 'Năm xuất bản: ')
+            ->setCellValue('A6', 'Thể loại: ')
+            ->setCellValue('A7', 'Số lượng mượn: ')
+            ->setCellValue('A8', 'Số lượng tồn: ')
+            ->setCellValue('A9', 'Giá: ')
+            ->setCellValue('A10', 'Location: ');
 
         $book = $this->getBookById($bookId);
 
@@ -723,20 +733,20 @@ class BookModel extends Model
 
         $book['quantity_borrow'] = $quantityBorrow['total'] ?? 0;
 
-        $sheet1->setCellValue('A2', $book['isbn_code'])
+        $sheet1->setCellValue('B1', $book['isbn_code'])
             ->setCellValue('B2', $book['book_name'])
-            ->setCellValue('C2', $book['author_name'])
-            ->setCellValue('D2', $book['publisher_name'])
-            ->setCellValue('E2', $book['year_published'])
-            ->setCellValue('F2', $book['categories'])
-            ->setCellValue('G2', $book['quantity_borrow'])
-            ->setCellValue('H2', $book['quantity'])
-            ->setCellValue('I2', $book['price'] . ' VND')
-            ->setCellValue('J2', $book['location']);
+            ->setCellValue('B3', $book['author_name'])
+            ->setCellValue('B4', $book['publisher_name'])
+            ->setCellValue('B5', $book['year_published'])
+            ->setCellValue('B6', $book['categories'])
+            ->setCellValue('B7', $book['quantity_borrow'])
+            ->setCellValue('B8', $book['quantity'])
+            ->setCellValue('B9', $book['price'] . ' VND')
+            ->setCellValue('B10', $book['location']);
         
         $sheet2 = $spreadsheet->createSheet();
 
-        $sheet2->setTitle('Thông tin độc giả mượn sách');
+        $sheet2->setTitle('Thống kê độc giả mượn sách');
 
         $sheet2->setCellValue('A1', 'Mã độc giả')
             ->setCellValue('B1', 'Tên độc giả')
@@ -758,6 +768,7 @@ class BookModel extends Model
 
         if (empty($borrowBooks)) {
             $sheet2->setCellValue('A2', 'Không có dữ liệu');
+            $sheet2->mergeCells('A2:H2');
         } else {
             $row = 2;
     
@@ -772,6 +783,17 @@ class BookModel extends Model
                     ->setCellValue('H' . $row, $borrowBook['fine_amount'] . ' VND');
     
                 $row++;
+            }
+        }
+
+        // Style
+        $sheet1->getStyle('A1:A10')->getFont()->setBold(true);
+        $sheet2->getStyle('A1:H1')->getFont()->setBold(true);
+
+        // Auto size columns for each worksheet
+        foreach ($spreadsheet->getWorksheetIterator() as $worksheet) {
+            foreach ($worksheet->getColumnIterator() as $column) {
+                $worksheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
             }
         }
 

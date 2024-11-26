@@ -232,6 +232,7 @@ class BorrowBookModel extends Model
     }
 
     /***
+     * r -> borrowbooks, u -> users, b -> books
      * @author Phan Đình Phú
      * @since 2024/11/17
      * @param array $where
@@ -291,7 +292,8 @@ class BorrowBookModel extends Model
     {
         $dataBase = $this->getByCondition(
             ['id' => $id],
-            'r.id, u.id as user_id, u.user_name, b.book_name, r.borrow_date, r.due_date, r.quantity',
+            'r.id, b.id as book_id, u.id as user_id, u.user_name, b.book_name
+            , r.borrow_date, r.due_date, r.quantity',
             1
         )['data'][0];
 
@@ -301,6 +303,7 @@ class BorrowBookModel extends Model
 
         return [
             'id' => $dataBase['id'],
+            'book_id' => $dataBase['book_id'],
             'user_id' => $dataBase['user_id'],
             'user_name' => $dataBase['user_name'],
             'book_name' => $dataBase['book_name'],
@@ -524,6 +527,7 @@ class BorrowBookModel extends Model
         return $this->db->getOne($sql, ['userId' => $userId])['total'];
 
     }
+
     /* Lấy danh sách sách mượn theo id người dùng
      * @param mixed $id
      * @return array
