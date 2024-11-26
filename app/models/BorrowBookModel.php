@@ -566,7 +566,7 @@ class BorrowBookModel extends Model
                     bb.borrow_date AS borrow_date,
                     bb.return_date AS return_date,
                     bb.quantity AS quantity,
-                    IF(f.borrow_id = bb.id, 'Đã trả', 'Chưa trả') AS borrow_status,
+                    IF(f.borrow_id = bb.id, CONCAT(bb.book_status,'(Đã trả)'), 'Chưa trả') AS borrow_status,
                     f.fine_amount AS fine
                 FROM $this->table bb
                 LEFT JOIN books b ON bb.book_id = b.id
