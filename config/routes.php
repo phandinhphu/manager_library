@@ -37,6 +37,10 @@ $routes['quan-tri/quan-ly-the-loai/tim-kiem/trang-(\d+).html'] = 'admin/category
 $routes['quan-tri/quan-ly-the-loai/tim-kiem'] = 'admin/category/search';
 $routes['quan-tri/quan-ly-the-loai'] = 'admin/category';
 
+// Statistic
+$routes['quan-tri/thong-ke-doc-gia/trang-(\d+).html'] = 'admin/statistic/reader/$1';
+$routes['quan-tri/thong-ke-doc-gia'] = 'admin/statistic/reader';
+
 
 // Publisher
 $routes['quan-tri/quan-ly-nha-xuat-ban/trang-(\d+).html'] = 'admin/publisher/index/$1';

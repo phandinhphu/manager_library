@@ -1,5 +1,7 @@
 <?php
-
+require_once 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class BorrowBookModel extends Model
 {
     public string $table = 'borrowbooks';
@@ -93,88 +95,16 @@ class BorrowBookModel extends Model
 
     
 
-    // public function search($where, $orderBy = 1, int $page = 1): array
-    // {
-    //     $offset = ($page - 1) * $this->limit;
-    //     $params = [];
-
-    //     switch ($orderBy) {
-    //         case 1:
-    //             $orderBy = 'book_name ASC';
-    //             break;
-    //         case 2:
-    //             $orderBy = 'author_name ASC';
-    //             break;
-    //         case 3:
-    //             $orderBy = 'borrow_date DESC';
-    //             break;
-    //         case 4:
-    //             $orderBy = 'due_date DESC';
-    //             break;
-    //         default:
-    //             $orderBy = 'book_name ASC';
-    //     }
-
-    //     $conditions = !empty($where) ? implode(' AND ', array_map(function($v) use (&$params, $where) {
-    //         if ($v === 'user_id') {
-    //             $params['user_id'] = $where['user_id'];
-    //             return "$v = :user_id";
-    //         }
-    //         if ($v === 'isbn_code') {
-    //             $params['isbn_code'] = '%' . $where['isbn_code'] . '%';
-    //             return "$v LIKE :isbn_code";
-    //         }
-    //         if ($v === 'book_name') {
-    //             $params['book_name'] = '%' . $where['book_name'] . '%';
-    //             return "$v LIKE :book_name";
-    //         }
-    //         if ($v === 'author_name') {
-    //             $params['author_name'] = '%' . $where['author_name'] . '%';
-    //             return "$v LIKE :author_name";
-    //         }
-            
-    //         $params[$v] = $where[$v];
-    //         return "$v = :$v";
-    //     }, array_keys($where))) : '';
-
-    //     $sql =
-    //         "SELECT * FROM (
-    //             SELECT
-    //                 b.isbn_code as isbn_code,
-    //                 b.book_name as book_name,
-    //                 a.author_name as author_name,
-    //                 NULL as borrow_date,
-    //                 NULL as due_date,
-    //                 'Đang xử lý' as status
-    //             FROM request r
-    //             JOIN books b ON r.book_id = b.id
-    //             JOIN authors a ON b.author_id = a.id
-    //             WHERE $conditions
-
-    //             UNION ALL
-
-    //             SELECT
-    //                 b.isbn_code as isbn_code,
-    //                 b.book_name as book_name,
-    //                 a.author_name as author_name,
-    //                 bb.borrow_date as borrow_date,
-    //                 bb.due_date as due_date,
-    //                 'Đã mượn' as status
-    //             FROM $this->table bb
-    //             JOIN books b ON bb.book_id = b.id
-    //             JOIN authors a ON b.author_id = a.id
-    //             WHERE $conditions
-    //         ) AS combined  
-    //         ORDER BY $orderBy
-    //         LIMIT $offset, $this->limit";
-
-    //     $results = $this->db->query($sql, $params)->fetchAll(PDO::FETCH_ASSOC);
-    //     return [
-    //         'data' => $results,
-    //         'total' => count($this->db->getAll($sql, $params))
-    //     ];
-
-    // }
+    /**
+     * Tìm kiếm sách mượn
+     * @param mixed $where
+     * @param mixed $orderBy
+     * @param mixed $status
+     * @param int $page
+     * @return array
+     * @author Trần Duy Vương
+     * @since 2024-11-24
+     */
     public function search($where, $orderBy = 1, $status = 0, int $page = 1): array
     {
         $offset = ($page - 1) * $this->limit;
@@ -399,7 +329,7 @@ class BorrowBookModel extends Model
 
         return $diff > 0 ? $diff : 0;
     }
-
+    
     /***
      * @author Phan Đình Phú
      * @since 2024/11/21
@@ -435,7 +365,7 @@ class BorrowBookModel extends Model
         return $this->db->getAll($sql, ['year' => $year]);
     }
 
-    /**
+    /***
      * @author Phan Đình Phú
      * @since 2024/11/25
      * @param int $userId
@@ -592,5 +522,121 @@ class BorrowBookModel extends Model
                 WHERE user_id = :userId";
 
         return $this->db->getOne($sql, ['userId' => $userId])['total'];
+
+    }
+    /* Lấy danh sách sách mượn theo id người dùng
+     * @param mixed $id
+     * @return array
+     * @author Trần Duy Vương
+     * @since 2024-11-24
+     */
+    public function getBorrowBookByUserId($id): array
+    {
+        $sql = 
+        "SELECT 
+            b.book_name AS book_name,
+            bb.borrow_date AS borrow_date,
+            bb.return_date AS return_date,
+            bb.quantity AS quantity,
+            IF(f.borrow_id = bb.id, 'Đã trả', 'Chưa trả') AS borrow_status,
+            f.fine_amount AS fine
+        FROM borrowbooks bb
+        LEFT JOIN books b ON bb.book_id = b.id
+        LEFT JOIN fines f ON bb.id = f.borrow_id
+        WHERE bb.user_id = $id
+        ";
+        $reader = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        return $reader;
+    }
+
+    /**
+     * Xuất file excel danh sách sách mượn theo id người dùng
+     * @return void
+     * @author Trần Duy Vương
+     * @since 2024-11-24
+     */
+    public function exportExcelReader($userId): void
+    {
+        $sql = "SELECT
+                    b.book_name AS book_name,
+                    bb.borrow_date AS borrow_date,
+                    bb.return_date AS return_date,
+                    bb.quantity AS quantity,
+                    IF(f.borrow_id = bb.id, 'Đã trả', 'Chưa trả') AS borrow_status,
+                    f.fine_amount AS fine
+                FROM $this->table bb
+                LEFT JOIN books b ON bb.book_id = b.id
+                LEFT JOIN fines f ON bb.id = f.borrow_id
+                WHERE bb.user_id = :user_id
+                ORDER BY bb.borrow_date DESC";
+
+        $borrowBooks = $this->db->getAll($sql,['user_id' => $userId]);
+
+        $sql1 = "SELECT * FROM users WHERE id = :user_id";
+        $user = $this->db->getOne($sql1, ['user_id' => $userId]);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Thông tin mượn sách');
+
+        // Thông tin khách hàng
+        $sheet->setCellValue('A1', 'THÔNG TIN NGƯỜI MƯỢN');
+        $sheet->mergeCells('A1:G1');
+        $sheet->setCellValue('A2', 'Họ tên:');
+        $sheet->setCellValue('B2', $user['user_name']);
+        $sheet->setCellValue('A3', 'Email:');
+        $sheet->setCellValue('B3', $user['email']);
+        $sheet->setCellValue('A4', 'Số điện thoại:');
+        $sheet->setCellValue('B4', $user['phone_number']);
+
+        // Tiêu đề danh sách sách
+        $sheet->setCellValue('A6', 'DANH SÁCH SÁCH ĐÃ MƯỢN');
+        $sheet->mergeCells('A6:G6');
+
+        // Header bảng sách mượn
+        $sheet->setCellValue('A7', 'STT');
+        $sheet->setCellValue('B7', 'Tên sách');
+        $sheet->setCellValue('C7', 'Ngày mượn');
+        $sheet->setCellValue('D7', 'Ngày trả');
+        $sheet->setCellValue('E7', 'Số lượng');
+        $sheet->setCellValue('F7', 'Trạng thái');
+        $sheet->setCellValue('G7', 'Tiền phạt');
+
+        // Style
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+        $sheet->getStyle('A6:G6')->getFont()->setBold(true);
+        $sheet->getStyle('A7:G7')->getFont()->setBold(true);
+
+        if(empty($borrowBooks)) {
+            $sheet->setCellValue('A8', 'Không có dữ liệu');
+            $sheet->mergeCells('A8:G8');
+        } else {
+            $row = 8;
+            foreach($borrowBooks as $index => $book) {
+                $sheet->setCellValue('A'.$row, $index + 1);
+                $sheet->setCellValue('B'.$row, $book['book_name']);
+                $sheet->setCellValue('C'.$row, $book['borrow_date']);
+                $sheet->setCellValue('D'.$row, $book['return_date']);
+                $sheet->setCellValue('E'.$row, $book['quantity']);
+                $sheet->setCellValue('F'.$row, $book['borrow_status']);
+                $sheet->setCellValue('G'.$row, number_format($book['fine'], 0, ',', '.') . ' VNĐ');
+                $row++;
+            }
+        }
+        
+        // Auto size column
+        foreach(range('A','G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $file_name = 'Thông tin sách mượn của ' . $user['user_name'] . '-' . date('Y-m-d_H-i-s') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        ob_clean();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $file_name . '"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+
+        exit();
     }
 }
