@@ -8,6 +8,22 @@ class UserModel extends Model
         parent::__construct();
     }
 
+    /**
+     * Lấy tất cả người dùng
+     * @return array
+     * @author Trần Duy Vương
+     * @since 2024-11-26
+     */
+    public function getAllUsers(): array
+    {
+        $sql = "SELECT * FROM $this->table";
+        $users = $this->db->getAll($sql);
+        return [
+            'data' => $users,
+            'total' => count($users),
+        ];
+    }
+
     /***
      * @author Phan Đình Phú
      * @since 2024/11/12
@@ -134,6 +150,12 @@ class UserModel extends Model
         ];
     }
 
+    /**
+     * Lấy thống kê độc giả đang mượn sách
+     * @return array
+     * @author Trần Duy Vương
+     * @since 2024-11-26
+     */
     public function getReaderStats(): array
     {
         $stats = $this->db->getOne("SELECT 
@@ -146,6 +168,12 @@ class UserModel extends Model
         return $stats;
     }
 
+    /**
+     * Lấy thống kê số tiền phạt theo tháng
+     * @return array
+     * @author Trần Duy Vương
+     * @since 2024-11-26
+     */
     public function getFineStats(): array
     {
         $sql = 

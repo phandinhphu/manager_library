@@ -91,7 +91,7 @@ class Statistic extends Controller
 
         $this->data['headercontent']['tab'] = 'statistic';
         $this->data['subcontent']['title'] = 'Thống kê độc giả';
-        $this->data['subcontent']['total_reader'] = $readers['total'];
+        $this->data['subcontent']['total_reader'] = $this->userModel->getAllUsers()['total'];
         $this->data['subcontent']['readers'] = $readers['data'];
         $this->data['subcontent']['total_pages'] = $this->userModel->getTotalPage($readers['total']);
         $this->data['subcontent']['page'] = $page;
