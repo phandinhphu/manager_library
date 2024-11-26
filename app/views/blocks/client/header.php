@@ -11,6 +11,7 @@
                 <li class="first__items <?= isset($tab) && $tab === 'tra-cuu' ? 'active' : '' ?>">
                     <a class="first__items-link" href="<?= WEB_ROOT . '/tra-cuu' ?>">Tra cứu</a>
                 </li>
+                <?php if (isset($_SESSION['user'])) : ?>
                 <li class="first__items <?= isset($tab) && $tab == 'wishlist' ? 'active' : '' ?>">
                     <a
                         class="first__items-link"
@@ -24,6 +25,7 @@
                 <li class="first__items <?= isset($tab) && $tab == 'history' ? 'active' : '' ?>">
                     <a class="first__items-link" href="<?= WEB_ROOT . '/lich-su' ?>">Lịch sử</a>
                 </li>
+                <?php endif; ?>
                 <li class="line"></li>
             </ul>
         </div>
