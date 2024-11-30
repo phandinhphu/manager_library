@@ -181,7 +181,7 @@
 
         const ctx = document.getElementById('myChart');
         myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: mounth,
                 datasets: [{
@@ -191,6 +191,8 @@
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,   
                 scales: {
                     x: {
                         title: {

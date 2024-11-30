@@ -157,7 +157,7 @@
                                 <?php foreach ($category as $item) : ?>
                                     <option
                                         value="<?= $item['id'] ?>"
-                                        <?= isset($book['categories']) && in_array($item['id'], $book['categories']) ? 'selected' : '' ?>
+                                        <?= isset($book['categories']) && in_array($item['category_name'], explode(', ', $book['categories'])) ? 'selected' : '' ?>
                                     >
                                         <?= $item['category_name'] ?>
                                     </option>

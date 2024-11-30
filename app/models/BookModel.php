@@ -672,7 +672,7 @@ class BookModel extends Model
                 ->setCellValue('F' . $row, $book['categories'])
                 ->setCellValue('G' . $row, $book['quantity_borrow'])
                 ->setCellValue('H' . $row, $book['quantity'])
-                ->setCellValue('I' . $row, $book['price'] . ' VND')
+                ->setCellValue('I' . $row, number_format($book['price'], 0, ',', '.') . ' VND')
                 ->setCellValue('J' . $row, $book['location']);
 
             $row++;
@@ -691,6 +691,7 @@ class BookModel extends Model
         $file_name = 'Thong_ke_sach_' . date('Y-m-d_H-i-s') . '.xlsx';
 
         $writer = new Xlsx($spreadsheet);
+        ob_clean();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $file_name . '"');
         header('Cache-Control: max-age=0');
@@ -741,7 +742,7 @@ class BookModel extends Model
             ->setCellValue('B6', $book['categories'])
             ->setCellValue('B7', $book['quantity_borrow'])
             ->setCellValue('B8', $book['quantity'])
-            ->setCellValue('B9', $book['price'] . ' VND')
+            ->setCellValue('B9', number_format($book['price'], 0, ',', '.') . ' VND')
             ->setCellValue('B10', $book['location']);
         
         $sheet2 = $spreadsheet->createSheet();
@@ -780,7 +781,7 @@ class BookModel extends Model
                     ->setCellValue('E' . $row, $borrowBook['return_date'])
                     ->setCellValue('F' . $row, $borrowBook['book_status'])
                     ->setCellValue('G' . $row, $borrowBook['days_overdue'] . ' ngày')
-                    ->setCellValue('H' . $row, $borrowBook['fine_amount'] . ' VND');
+                    ->setCellValue('H' . $row, number_format($borrowBook['fine_amount'], 0, ',', '.') . ' VND');
     
                 $row++;
             }
@@ -801,6 +802,7 @@ class BookModel extends Model
         $file_name = 'Thong_ke_sach_' . $book['book_name'] . '_' . date('Y-m-d_H-i-s') . '.xlsx';
 
         $writer = new Xlsx($spreadsheet);
+        ob_clean();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $file_name . '"');
         header('Cache-Control: max-age=0');
