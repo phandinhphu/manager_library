@@ -13,7 +13,7 @@ $folder = str_replace($_SERVER['DOCUMENT_ROOT'], '', $dir_root);
 
 $web_root = $http . $folder;
 
-define('WEB_ROOT', $web_root);
+define('WEB_ROOT', $_ENV['WEB_ROOT'] ?? $web_root);
 
 $configs = scandir('config');
 foreach ($configs as $config) {
