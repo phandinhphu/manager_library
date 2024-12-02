@@ -200,7 +200,9 @@ class Account extends Controller
 
             // Xoá ảnh cũ
             if ($account['avatar'] !== $checkAvatar['path'] && $checkAvatar['status'] === 'success') {
-                unlink($account['avatar']);
+                if ($account['avatar'] !== 'uploads/no-image.png') {
+                    unlink($account['avatar']);
+                }
             }
 
             $dataReq['avatar'] = $checkAvatar['path'];

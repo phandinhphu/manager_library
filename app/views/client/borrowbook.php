@@ -65,13 +65,13 @@
                                 echo '<tr><td colspan="7">Không có dữ liệu</td></tr>';
                             } else foreach ($borrowed_books as $key => $row): ?>
                                 <tr>
-                                    <td><?= $key + 1 ?></td>
-                                    <td><?= $row['isbn_code'] ? $row['isbn_code'] : "Không có dữ liệu" ?></td>
-                                    <td><?= $row['book_name'] ? $row['book_name'] : "Không có dữ liệu" ?></td>
-                                    <td><?= $row['author_name'] ? $row['author_name'] : "Không có dữ liệu" ?></td>
-                                    <td><?= $row['borrow_date'] ? $row['borrow_date'] : "Không có dữ liệu" ?></td>
-                                    <td><?= $row['due_date'] ? $row['due_date'] : "Không có dữ liệu" ?></td>
-                                    <td><?= $row['status'] ? $row['status'] : "Không có dữ liệu" ?></td>
+                                    <td data-label="STT"><?= $key + 1 ?></td>
+                                    <td data-label="Mã sách"><?= $row['isbn_code'] ? $row['isbn_code'] : "Không có dữ liệu" ?></td>
+                                    <td data-label="Tên sách"><?= $row['book_name'] ? $row['book_name'] : "Không có dữ liệu" ?></td>
+                                    <td data-label="Tên tác giả"><?= $row['author_name'] ? $row['author_name'] : "Không có dữ liệu" ?></td>
+                                    <td data-label="Ngày mượn"><?= $row['borrow_date'] ? $row['borrow_date'] : "Không có dữ liệu" ?></td>
+                                    <td data-label="Ngày trả"><?= $row['due_date'] ? $row['due_date'] : "Không có dữ liệu" ?></td>
+                                    <td data-label="Trạng thái"><?= $row['status'] ? $row['status'] : "Không có dữ liệu" ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

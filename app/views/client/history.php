@@ -88,26 +88,26 @@
                                 foreach ($returnBooks as $key => $book) :
                                 ?>
                                     <tr>
-                                        <td><?= $key + 1 ?></td>
-                                        <td>
+                                        <td data-label="STT"><?= $key + 1 ?></td>
+                                        <td data-label="Mã sách">
                                             <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $book['isbn_code'] ?>"><?= $book['isbn_code'] ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Tên sách">
                                             <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $book['book_name'] ?>"><?= $book['book_name'] ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Tên tác giả">
                                             <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $book['author_name'] ?>"><?= $book['author_name'] ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Ngày mượn">
                                             <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $book['borrow_date'] ?>"><?= $book['borrow_date'] ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Ngày trả">
                                             <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $book['return_date'] ?>"><?= $book['return_date'] ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Trạng thái trả">
                                             <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $book['book_status'] ?>"><?= $book['book_status'] ?></span>
                                         </td>
-                                        <td>
+                                        <td data-label="Tiền phạt">
                                             <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $book['fine_amount'] . 'VND' ?>"><?= $book['fine_amount'] . 'VND' ?></span>
                                         </td>
                                     </tr>
@@ -177,22 +177,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
+                                <td class="width-bf-50" data-label="Tổng số sách">
                                     <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $statistic['total'] ?>"><?= $statistic['total'] ?></span>
                                 </td>
-                                <td>
+                                <td class="width-bf-50" data-label="Tổng số sách đã trả">
                                     <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $statistic['total_return'] ?>"><?= $statistic['total_return'] ?></span>
                                 </td>
-                                <td>
+                                <td class="width-bf-50" data-label="Tổng số sách đã trả (quá hạn)">
                                     <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $statistic['total_return_overdue'] ?>"><?= $statistic['total_return_overdue'] ?></span>
                                 </td>
-                                <td>
+                                <td class="width-bf-50" data-label="Tổng số sách chưa trả">
                                     <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $statistic['total_borrow'] ?>"><?= $statistic['total_borrow'] ?></span>
                                 </td>
-                                <td>
+                                <td class="width-bf-50" data-label="Tổng số sách chưa trả (quá hạn)">
                                     <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $statistic['total_borrow_overdue'] ?>"><?= $statistic['total_borrow_overdue'] ?></span>
                                 </td>
-                                <td>
+                                <td class="width-bf-35" data-label="Tổng phí phạt">
                                     <span class="d-block text-truncate" data-bs-toggle="tooltip" title="<?= $statistic['total_fine'] ?>"><?= $statistic['total_fine'] ?></span>
                                 </td>
                             </tr>

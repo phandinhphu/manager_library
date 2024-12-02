@@ -31,6 +31,7 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/client/css/grid.css' ?>" />
     <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/client/css/style.css' ?>" />
+    <link rel="stylesheet" href="<?= WEB_ROOT . '/public/assets/client/css/responsive.css' ?>" />
 
     <style>
         .text-truncate {
@@ -108,7 +109,7 @@
     var user = <?= $_SESSION['user']['user_id'] ?? 'undefined' ?>;
     if (user !== undefined) {
         console.log('Đã đăng nhập');
-        var con = new WebSocket('ws://localhost:8081');
+        var con = new WebSocket('ws://<?= $_ENV['WEBSOCKET_SERVER'] ?>:<?= $_ENV['WEBSOCKET_PORT'] ?>');
 
         const toastContainerNotify = document.querySelector('.toast-container');
         const toastElementNotify = document.querySelector('.toast');

@@ -16,10 +16,16 @@
                                 <div class="component__content">
                                     <ul class="list__groups">
                                         <li class="list__group-item">
-                                            <a class="list__group-item-link" href="userprofile.html">Hồ sơ</a>
+                                            <a 
+                                                class="list__group-item-link <?= $tab == 'info' ? 'selected' : '' ?>" 
+                                                href="<?= WEB_ROOT . '/thong-tin-ca-nhan' ?>"
+                                            >Hồ sơ</a>
                                         </li>
                                         <li class="list__group-item">
-                                            <a class="list__group-item-link selected" href="changepassword.html">Đổi mật khẩu</a>
+                                            <a 
+                                                class="list__group-item-link <?= $tab == 'password' ? 'selected' : '' ?>" 
+                                                href="<?= WEB_ROOT . '/doi-mat-khau' ?>"
+                                            >Đổi mật khẩu</a>
                                         </li>
                                     </ul>
                                 </div>

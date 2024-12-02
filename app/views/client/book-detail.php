@@ -7,12 +7,12 @@
                 </div>
                 <div class="component__content">
                     <div class="row">
-                        <div class="grCol grL-4">
+                        <div class="grCol grL-4 grM-12 grC-12">
                             <div class="component__content-img">
                                 <img src="<?= WEB_ROOT . '/' . $book['img'] ?>" alt="Ảnh đại diện" />
                             </div>
                         </div>
-                        <div class="grCol grL-8">
+                        <div class="grCol grL-8 grM-12 grC-12">
                             <div class="component__content-info">
                                 <h3 class="component__content-info-title">Tên sách</h3>
                                 <p class="component__content-info-text"><?= $book['book_name'] ?></p>
@@ -170,7 +170,7 @@
         delay: 3000
     });
 
-    var conn = new WebSocket('ws://localhost:8081');
+    var conn = new WebSocket('ws://<?= $_ENV['WEBSOCKET_SERVER'] ?>:<?= $_ENV['WEBSOCKET_PORT'] ?>');
     var bookId = <?= $book['id'] ?>;
 
     conn.onopen = (e) => {

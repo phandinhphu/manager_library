@@ -202,7 +202,7 @@
 
     document.querySelector('tbody').addEventListener('click', async function(event) {
         if (event.target.classList.contains('btn-accepted')) {
-            var con = new WebSocket('ws://localhost:8081');
+            var con = new WebSocket('ws://<?= $_ENV['WEBSOCKET_SERVER'] ?>:<?= $_ENV['WEBSOCKET_PORT'] ?>');
             con.onopen = function() {
                 console.log('Kết nối thành công', user);
                 con.send(JSON.stringify({
@@ -249,7 +249,7 @@
 
     document.querySelector('tbody').addEventListener('click', async function(event) {
         if (event.target.classList.contains('btn-denied')) {
-            var con = new WebSocket('ws://localhost:8081');
+            var con = new WebSocket('ws://<?= $_ENV['WEBSOCKET_SERVER'] ?>:<?= $_ENV['WEBSOCKET_PORT'] ?>');
             if (!confirm('Bạn có chắc chắn muốn từ chối yêu cầu này?')) {
                 return;
             }

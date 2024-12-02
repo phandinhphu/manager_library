@@ -1,0 +1,153 @@
+/* Mobile: width < 740px */
+@media only screen and (max-width: 46.1875em) {
+}
+
+/* Tablet: width >=740px & width < 1024px */
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+	/* Img page book detail */
+	.component__content-img img {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+	}
+}
+
+/* Tablet & Mobile: width < 1024px */
+@media only screen and (max-width: 63.9375em) {
+	.header .mobile-menu-btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.header {
+		display: block;
+		overflow: hidden;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        animation: slide-down 0.5s ease-in-out;
+	}
+
+    @keyframes slide-down {
+        0% {
+            transform: translateY(-100%);
+        }
+        100% {
+            transform: translateY(0);
+        }
+        
+    }
+
+	.header__first {
+		display: block;
+	}
+
+	.header__first > a {
+		line-height: 25px;
+	}
+
+	.header__first > a > h1 {
+		transform: translateY(10px);
+	}
+
+	.first__list {
+		display: block;
+		width: 100%;
+	}
+
+	.first__items:first-child {
+		margin-top: 1rem;
+	}
+
+	.first__items {
+		margin-bottom: 1rem;
+	}
+
+	.first__items-link {
+		line-height: 36px;
+	}
+
+	.first__items.active .first__items-link,
+	.first__items:hover .first__items-link {
+		background-color: #ccc;
+		color: #000;
+	}
+
+	/* Page Register */
+	.avatar__label {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+	}
+
+	.avatar__label img {
+		margin-bottom: 1rem;
+	}
+
+	.avatar__label input {
+		width: 100%;
+	}
+
+	.border {
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		padding: 1rem;
+	}
+
+	/* responsive table for mobile & tablet */
+	.table {
+		display: block;
+	}
+
+	thead {
+		display: none; /* Ẩn tiêu đề bảng */
+	}
+
+	tbody {
+		display: block;
+	}
+
+	tr {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid #ddd;
+		margin-bottom: 10px;
+		padding: 10px;
+	}
+
+    .table tr:hover {
+        background-color: transparent;
+    }
+
+	td {
+		display: flex;
+        justify-content: space-between;
+		padding: 5px 0;
+	}
+
+    .table td {
+        text-align: left;
+    }
+
+	td::before {
+		content: attr(data-label); /* Lấy nhãn từ thuộc tính `data-label` */
+		font-weight: bold;
+		width: 25%;
+	}
+
+    .width-bf-35::before {
+        width: 35%;
+    }
+
+    .width-bf-50::before {
+        width: 50%;
+    }
+
+    .text-truncate {
+        max-width: 100% !important;
+    }
+}
+
+/* Pc: width >= 1024px */
+@media only screen and (min-width: 64em) {
+}

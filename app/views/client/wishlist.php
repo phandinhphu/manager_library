@@ -123,36 +123,36 @@
                                 foreach ($books_wishlist as $key => $book) : 
                             ?>
                                 <tr>
-                                    <td><?= $key + 1 ?></td>
-                                    <td>
+                                    <td data-label="STT"><?= $key + 1 ?></td>
+                                    <td data-label="Mã sách">
                                         <span
                                             class="d-block text-truncate"
                                             data-bs-toggle="tooltip"
                                             title="<?= $book['isbn_code'] ?>"
                                         ><?= $book['isbn_code'] ?></span>
                                     </td>
-                                    <td>
+                                    <td data-label="Tên sách">
                                         <span
                                             class="d-block text-truncate"
                                             data-bs-toggle="tooltip"
                                             title="<?= $book['book_name'] ?>"
                                         ><?= $book['book_name'] ?></span>
                                     </td>
-                                    <td>
+                                    <td data-label="Tên tác giả">
                                         <span
                                             class="d-block text-truncate"
                                             data-bs-toggle="tooltip"
                                             title="<?= $book['author_name'] ?>"
                                         ><?= $book['author_name'] ?></span>
                                     </td>
-                                    <td>
+                                    <td data-label="Ngày trả">
                                         <input
                                             type="date"
                                             name="return_date"
                                             class="form__filter-input return_date"
                                         />
                                     </td>
-                                    <td>
+                                    <td data-label="Số lượng">
                                         <input
                                             type="number"
                                             name="quantity"
@@ -162,7 +162,7 @@
                                             value="1"
                                         />
                                     </td>
-                                    <td>
+                                    <td data-label="Thao tác">
                                         <button
                                             data-book-id="<?= $book['id'] ?>"
                                             type="button"
@@ -274,6 +274,7 @@
     });
 
     document.getElementById('btn-borrow').onclick = async () => {
+        console.log('click');   
         const books = document.querySelectorAll('.table tbody tr');
         let data = [];
 
@@ -320,7 +321,7 @@
             }
         });
 
-        if (data.length !== 0) {
+        if (data.length === books.length - 1) {
             const req = await fetch(`<?= WEB_ROOT . '/add-request' ?>`, {
                 method: 'POST',
                 body: JSON.stringify(data),

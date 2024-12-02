@@ -4,6 +4,10 @@ use Ratchet\ConnectionInterface;
 
 require '../vendor/autoload.php';
 
+// Sử dụng dotenv để load các biến môi trường từ file .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../', '.env.development');
+$dotenv->load();
+
 require '../config/database.php';
 require '../core/Connection.php';
 require '../core/Database.php';
@@ -106,7 +110,7 @@ $server = \Ratchet\Server\IoServer::factory(
             new WebSocketServer()
         )
     ),
-    8081
+    $_ENV['WEBSOCKET_PORT']
 );
 
 $server->run();

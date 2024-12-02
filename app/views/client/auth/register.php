@@ -1,7 +1,7 @@
 <div class="container">
     <div class="grid wide">
         <div class="row">
-            <div class="grCol grL-6 grL-o-3 component">
+            <div class="grCol grL-6 grL-o-3 grM-12 grC-12 component">
                 <div class="title">
                     <h2 class="title__text">Đăng ký</h2>
                 </div>

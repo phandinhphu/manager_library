@@ -4,7 +4,9 @@
     --text-color: #fff;
     --text-hover: #ccc;
     --color-white: #fff;
-    --color-black: #000;
+    --color-black: #000;   
+    
+    --height-header: 60px;
 }
 
 * {
@@ -73,14 +75,54 @@ header {
     background-color: var(--color-primary);
 }
 
+.table-mobile {
+    display: none;
+}
+
+.toast-container {
+    z-index: 99999;
+}
+
 .header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--height-header);
+    background-color: black;
+    z-index: 1;
     background-color: var(--color-primary);
     color: #fff;
+    transition: all ease-in 0.3s;
+}
+
+.header .mobile-menu-btn {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.header .mobile-menu-btn {
+    width: 60px;
+    height: 60px;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.header .mobile-menu-btn:hover {
+    background-color: #ccc;
+}
+
+.header .mobile-menu-icon {
+    font-size: 2.4rem;
+    color: #fff;
+}
+
+.header .mobile-menu-btn:hover .mobile-menu-icon {
+    color: #000;
 }
 
 .header__first {
@@ -145,7 +187,7 @@ header {
 /* container */
 .container {
     align-self: center;
-    margin: 2rem 0;
+    margin: var(--height-header) 0 2rem 0;
 }
 
 .component {

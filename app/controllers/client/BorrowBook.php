@@ -21,7 +21,7 @@ class BorrowBook extends Controller {
         $this->user_id = $_SESSION['user']['user_id'];
         $borrowed_books = $this->borrowBookModel->getByPage(["user_id" => $this->user_id], $page);
 
-        $this->data['headercontent']['tab'] = 'muon-sach';
+        $this->data['headercontent']['tab'] = 'book-borrow';
         $this->data['subcontent']['borrowed_books'] = $borrowed_books['data'];
         $this->data['subcontent']['total_pages'] = $this->borrowBookModel->getTotalPage($borrowed_books['total']);
         $this->data['subcontent']['page'] = $page;
@@ -73,7 +73,7 @@ class BorrowBook extends Controller {
 
             $borrowed_books = $this->borrowBookModel->search($where, $orderBy, $status, $page);
 
-            $this->data['headercontent']['tab'] = 'muon-sach';
+            $this->data['headercontent']['tab'] = 'book-borrow';
             $this->data['subcontent']['borrowed_books'] = $borrowed_books['data'];
             $this->data['subcontent']['total_pages'] = $this->borrowBookModel->getTotalPage($borrowed_books['total'] ?? 0);
             $this->data['subcontent']['page'] = $page;
