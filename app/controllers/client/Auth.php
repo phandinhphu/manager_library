@@ -10,7 +10,7 @@ class Auth extends Controller
         $this->authModel = $this->model('UserModel');
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @return void
@@ -21,7 +21,7 @@ class Auth extends Controller
         header('location: ' . WEB_ROOT . '/dang-nhap');
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/17
      * @return void
@@ -59,7 +59,7 @@ class Auth extends Controller
         $this->view('layouts/client_layout', $this->data);
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @return void
@@ -130,16 +130,16 @@ class Auth extends Controller
                 'active_token' => $activeToken
             ];
             
-            $rs = $this->authModel->Add($dataIns);
-
-            if ($rs) {
-                $resSendEmail = $this->sendMail(
-                    $dataReq['email'],
-                    'Kích hoạt tài khoản',
-                    'Click vào link sau để kích hoạt tài khoản: ' . WEB_ROOT . '/kich-hoat-tai-khoan?token=' . $activeToken
-                );
-
-                if ($resSendEmail) {
+            $resSendEmail = $this->sendMail(
+                $dataReq['email'],
+                'Kích hoạt tài khoản',
+                'Click vào link sau để kích hoạt tài khoản: ' . WEB_ROOT . '/kich-hoat-tai-khoan?token=' . $activeToken
+            );
+            
+            if ($resSendEmail) {
+                $rs = $this->authModel->Add($dataIns);
+                
+                if ($rs) {
                     echo json_encode([
                         'status' => 'success',
                         'message' => 'Đăng ký thành công. Vui lòng kiểm tra email để kích hoạt tài khoản',
@@ -153,7 +153,7 @@ class Auth extends Controller
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Đăng ký không thành công. Vui lòng thử lại sau',
+                    'message' => 'Đăng ký không thành công. Vui lòng thử email khác',
                 ]);
             }
         } else {
@@ -165,7 +165,7 @@ class Auth extends Controller
 
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/14
      * @return void
@@ -190,7 +190,7 @@ class Auth extends Controller
         }
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/28
      * @return void
@@ -238,7 +238,7 @@ class Auth extends Controller
 
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/28
      * @return void
@@ -300,7 +300,7 @@ class Auth extends Controller
         }
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/11
      * @return void
@@ -406,7 +406,7 @@ class Auth extends Controller
 
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/11
      * @return void
@@ -459,7 +459,7 @@ class Auth extends Controller
 
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/17
      * @param $loggedInUser
@@ -474,7 +474,7 @@ class Auth extends Controller
         header('location: ' . WEB_ROOT . '/trang-chu');
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/11
      * @param $loggedInUser
@@ -487,7 +487,7 @@ class Auth extends Controller
         $_SESSION['user']['avatar'] = $loggedInUser['avatar'];
     }
 
-    /***
+    /**
      * @author Phan Đình Phú
      * @since 2024/10/17
      * @return string[]

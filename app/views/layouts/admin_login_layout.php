@@ -36,9 +36,12 @@
     $this->view('blocks/admin/header');
     ?>
     <div class="container">
-        <?php
-        $this->view($content, $subcontent ?? []);
-        ?>
+        <div class="content">
+            <?php
+            $this->view($content, $subcontent ?? []);
+            $this->view('blocks/admin/footer');
+            ?>
+        </div>
     </div>
 </div>
 

@@ -154,7 +154,7 @@
 </div>
 
 <div class="modal fade" id="modalLoading" aria-hidden="true" aria-labelledby="modalLoadingLabel2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fs-2" id="modalDetailLabel2">Loading</h5>

@@ -156,7 +156,6 @@ class Account extends Controller
                 'phone' => trim($_POST['phone']),
                 'cccd' => trim($_POST['cccd']),
                 'address' => trim($_POST['address']),
-                'password' => trim($_POST['password']),
             ];
 
             $account = $this->accountModel->getUser(['id' => $id]);
@@ -209,7 +208,6 @@ class Account extends Controller
 
             $dataIns = [
                 'email' => $dataReq['email'],
-                'pass_word' => password_hash($dataReq['password'], PASSWORD_DEFAULT),
                 'user_name' => $dataReq['username'],
                 'phone_number' => $dataReq['phone'],
                 'cccd' => $dataReq['cccd'],

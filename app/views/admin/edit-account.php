@@ -106,33 +106,6 @@
                                 class="form__message"></span>
                         </div>
                         <div class="form__group">
-                            <label
-                                for="password"
-                                class="form__label">Mật khẩu</label>
-                            <input
-                                rules="min:6"
-                                type="password"
-                                name="password"
-                                id="password"
-                                class="form__input"
-                            />
-                            <span
-                                class="form__message"></span>
-                        </div>
-                        <div class="form__group">
-                            <label
-                                for="rpassword"
-                                class="form__label">Nhập lại mật khẩu</label>
-                            <input
-                                rules="confirmation"
-                                type="password"
-                                name="rpassword"
-                                id="rpassword"
-                                class="form__input" />
-                            <span
-                                class="form__message"></span>
-                        </div>
-                        <div class="form__group">
                             <button
                                 type="submit"
                                 class="btn">
