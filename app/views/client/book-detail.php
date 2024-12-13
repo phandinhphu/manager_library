@@ -32,13 +32,19 @@
                                 </p>
                                 <div class="action">
                                     <div class="action__item">
-                                        <button class="btn__action" id="btn-like">
+                                        <button 
+                                            class="btn__action <?= $action === 'like' ? 'btn__action--active' : '' ?>" 
+                                            id="btn-like"
+                                        >
                                             <i class="fa-solid fa-thumbs-up"></i>
                                         </button>
                                         <span class="action__count likes"><?= $amount_likes ?></span>
                                     </div>
                                     <div class="action__item">
-                                        <button class="btn__action" id="btn-dislike">
+                                        <button 
+                                            class="btn__action <?= $action === 'dislike' ? 'btn__action--active' : '' ?>" 
+                                            id="btn-dislike"
+                                        >
                                             <i class="fa-solid fa-thumbs-down"></i>
                                         </button>
                                         <span class="action__count dislikes"><?= $amount_dislikes ?></span>
@@ -270,6 +276,10 @@
         if (res.status === 'success') {
             document.querySelector('.likes').innerHTML = res.amount_likes;
             document.querySelector('.dislikes').innerHTML = res.amount_dislikes;
+
+            document.getElementById('btn-like').classList.toggle('btn__action--active');
+
+            document.getElementById('btn-dislike').classList.remove('btn__action--active');
         } else {
             customAlert(res.message);
         }
@@ -283,6 +293,10 @@
         if (res.status === 'success') {
             document.querySelector('.likes').innerHTML = res.amount_likes;
             document.querySelector('.dislikes').innerHTML = res.amount_dislikes;
+
+            document.getElementById('btn-dislike').classList.toggle('btn__action--active');
+
+            document.getElementById('btn-like').classList.remove('btn__action--active');
         } else {
             customAlert(res.message);
         }

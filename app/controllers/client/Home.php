@@ -18,7 +18,7 @@ class Home extends Controller
         $this->data['subcontent']['newbooks'] = $newbooks;
         $this->data['subcontent']['mostlikedbooks'] = $this->bookModel->getMostLikedBooks();
         $this->data['subcontent']['mostdislikedbooks'] = $this->bookModel->getMostDislikedBooks();
-        $this->data['title'] = 'Client Home';
+        $this->data['title'] = 'Trang chủ';
         $this->data['content'] = 'client/home';
         $this->view('layouts/client_layout', $this->data);
     }
