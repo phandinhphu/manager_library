@@ -466,7 +466,12 @@
                 return_date: res.return_date,
             };
 
-            document.querySelector('.btn-confirm').addEventListener('click', () => {
+            const confirmButton = document.querySelector('.btn-confirm');
+            // Loại bỏ tất cả các sự kiện cũ trước khi thêm sự kiện mới
+            confirmButton.replaceWith(confirmButton.cloneNode(true));
+
+            const newConfirmButton = document.querySelector('.btn-confirm');
+            newConfirmButton.addEventListener('click', function() {
                 handleConfirm(data, modalView);
             });
         });
